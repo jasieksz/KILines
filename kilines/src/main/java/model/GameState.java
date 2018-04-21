@@ -1,6 +1,7 @@
 package model;
 
 import service.CollisionDetectionService;
+import service.TrackСleaningService;
 import service.UpdateDirectionService;
 import service.UpdatePositionService;
 
@@ -22,6 +23,7 @@ public class GameState {
     private UpdatePositionService updatePositionService = new UpdatePositionService();
     private CollisionDetectionService collisionDetectionService = new CollisionDetectionService();
     private UpdateDirectionService updateDirectionService = new UpdateDirectionService();
+    private TrackСleaningService trackСleaningService = new TrackСleaningService();
 
     public Map<Point, PlayerIdentifier> getBoard() {
         return board;
@@ -40,6 +42,7 @@ public class GameState {
                         if (!collisionDetectionService.detect(this, motorcycle)) {
                             board.put(motorcycle.getPosition(), motorcycle.getPlayerId());
                         } else {
+                            trackСleaningService.trigger(this, motorcycle);
                             break;
                         }
                     }
