@@ -11,7 +11,7 @@ import java.util.concurrent.TimeUnit;
 public class Server {
     public static void main(String[] args) throws Exception {
 
-         GameState gameState = new GameState.InitializerBuilder(1)
+        GameState gameState = new GameState.InitializerBuilder(1)
                 .boardX(640)
                 .boardY(480)
                 .addWalls()
