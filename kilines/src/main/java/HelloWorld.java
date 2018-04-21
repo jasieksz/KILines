@@ -20,12 +20,6 @@ public class HelloWorld {
     public static void main(String[] args) {
         Gson gson = new Gson();
 
-        staticFiles.location("/public");
-        get("/", (req, res) -> {
-            res.redirect("/index.html");
-            return null;
-        });
-
         get("/hello", (req, res) -> {
             return "{\"message\":\"Hello\"}";
         });
@@ -83,7 +77,7 @@ public class HelloWorld {
         Server server = new Server();
         StringBuilder stringBuilder = new StringBuilder();
         stringBuilder.append("type: \"init\", players: [");
-        GameState gameState = null; // server.getGameState(); TODO FIX THIS move to server
+        GameState gameState = server.getGameState();
         List<Motorcycle> motorcycles = gameState.getMotorcycles();
 
         for (Motorcycle motorcycle: motorcycles) {
