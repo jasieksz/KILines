@@ -36,4 +36,8 @@ public class Motorcycle {
     public void setSpeed(int speed) {
         this.speed = speed;
     }
+
+    public PlayerIdentifier getPlayerId() {
+        return playerId;
+    }
 }
