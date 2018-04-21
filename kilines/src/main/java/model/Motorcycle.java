@@ -50,7 +50,7 @@ public class Motorcycle {
     }
 
     public boolean isAlive() {
-        return isAlive();
+        return this.isAlive;
     }
 
     public Score getScore() {
