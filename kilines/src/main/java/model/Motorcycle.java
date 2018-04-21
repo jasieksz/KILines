@@ -6,6 +6,7 @@ public class Motorcycle {
     private Point position;
     private int speed;
     private boolean isAlive;
+    private Score score;
 
     public Motorcycle(PlayerIdentifier playerId, Point position) {
         this.playerId = playerId;
@@ -13,6 +14,7 @@ public class Motorcycle {
         this.direction = Direction.UP;
         this.speed = 1;
         this.isAlive = true;
+        this.score = score;
     }
 
     public Point getPosition() {
@@ -49,5 +51,9 @@ public class Motorcycle {
 
     public boolean isAlive() {
         return isAlive();
+    }
+
+    public Score getScore() {
+        return score;
     }
 }
