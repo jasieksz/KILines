@@ -1,7 +1,9 @@
 package model;
 
 public enum Color {
-    RED(255, 0, 0);
+    RED(255, 0, 0),
+    WHITE(255, 255, 255),
+    BLUE(0, 0, 255);
 
     private int r;
     private int g;

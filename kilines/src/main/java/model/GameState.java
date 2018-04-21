@@ -10,6 +10,7 @@ import java.util.Map;
 public class GameState {
     private Map<Point, PlayerIdentifier> board;
     private List<Motorcycle> motorcycles;
+
     public GameState(Map<Point, PlayerIdentifier> board, List<Motorcycle> motorcycles) {
         this.board = board;
         this.motorcycles = motorcycles;
@@ -27,13 +28,32 @@ public class GameState {
         return motorcycles;
     }
 
-    public void movePlayers(){
-        motorcycles.forEach(motorcycle -> updatePositionService.update(motorcycle));
+    public void movePlayers() {
+        motorcycles.stream()
+                .filter(Motorcycle::isAlive)
+                .forEach(motorcycle -> {
+                    for (int i = 0; i < motorcycle.getSpeed(); i++) {
+                        updatePositionService.update(motorcycle, 1);
+                        if (!collisionDetectionService.detect(this, motorcycle)) {
+                            board.put(motorcycle.getPosition(), motorcycle.getPlayerId());
+                        } else {
+                            break;
+                        }
+                    }
+                });
     }
-    public void checkCollisions(){
-        motorcycles.forEach(motorcycle -> collisionDetectionService.detect(this, motorcycle));
+
+    public void checkCollisions() {
+        motorcycles.stream()
+                .filter(Motorcycle::isAlive)
+                .filter(motorcycle -> collisionDetectionService.detect(this, motorcycle))
+                .forEach(motorcycle -> motorcycle.setAlive(false));
     }
-    public void changePlayerDirection(int id){
-        motorcycles.stream().filter(motorcycle -> true).forEach(motorcycle -> updateDirectionService.update(motorcycle));
+
+    public void changePlayerDirection(int playerId, Direction direction) {
+        motorcycles.stream()
+                .filter(Motorcycle::isAlive)
+                .filter(motorcycle -> motorcycle.getPlayerId().getPlayerId() == playerId)
+                .forEach(motorcycle -> updateDirectionService.updateDirection(motorcycle, direction));
     }
 }

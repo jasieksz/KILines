@@ -1,18 +1,19 @@
 package server;
 
 import model.GameState;
+import rx.Observable;
 
-import java.util.Map;
+import java.util.concurrent.TimeUnit;
 
 public class Server {
+    public static void main(String[] args) throws Exception {
 
-    private GameState gameState = new GameState(null, null);
+        GameState gameState = new Initializer(GameUtils.boardX, GameUtils.boardy).initializeGameState();
 
-    public static void main(String[] args) {
-        System.out.println("");
-    }
-
-    public GameState getGameState() {
-        return gameState;
+        Observable.interval(GameUtils.interval, TimeUnit.MICROSECONDS)
+                .toBlocking()
+                .subscribe(tick -> {
+                    gameState.movePlayers();
+                });
     }
 }
