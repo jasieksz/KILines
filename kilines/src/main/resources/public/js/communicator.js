@@ -11,21 +11,23 @@ class Communicator{
             this.updateCallback(msg)
     }
 
-    login() {
-         resp = httpGet(this.address + "/login")
+    login(name) {
+         var resp = this.httpGet(this.address + "/login/" + name)
+         console.log("resp: " + resp)
              if(resp.isOk)
                  this.token = resp.token
              else
-                 document.getElementById("errors").innerHTML = resp.msg
+                 alert(resp.msg)
     }
 
     openWebsocket() {
-        this.socket = new WebSocket(address)
+        this.socket = new WebSocket("ws://localhost:4567")
         this.socket.onmessage((e) => this.receiveUpdates(e))
     }
 
     init() {
-        this.initState = httpGet(this.address + "/init")
+        this.initState = this.httpGet(this.address + "/init")
+        console.log(this.initState)
     }
 
     update (direction) {
