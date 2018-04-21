@@ -47,7 +47,7 @@ function renderPlayers() {
 
 function scoreboard() {
     if(players && players.length > 0){
-        fill(0);
+        fill(255);
         textFont("Orbitron");
         textSize(18);
         text("Score");
@@ -93,6 +93,7 @@ class Player {
     }
 
     render () {
+        fill(255);
         stroke(this.color);
         rect(this.x, this.y, rectW, rectH);
     }
