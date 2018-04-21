@@ -1,15 +1,15 @@
 import com.google.gson.Gson;
 import model.GameState;
 import model.Motorcycle;
-import server.*;
-import model.PlayerIdentifier;
 import model.Point;
+import server.Server;
 
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-import static spark.Spark.*;
+import static spark.Spark.get;
+import static spark.Spark.staticFiles;
 
 public class HelloWorld {
     static Map<Integer, String> users = new HashMap<>();
@@ -40,7 +40,45 @@ public class HelloWorld {
         });
 
         get("/init", (req, res) -> {
-            return "{type: \"init\", players: [{ nick: \"bob\", pos: {x: 10, y: 10}}]}";
+            return "{\n" +
+                    "       \"type\" : \"init\",\n" +
+                    "       \"players\": [\n" +
+                    "            {\n" +
+                    "                \"nick\": \"Andrzej\",\n" +
+                    "                \"pos\": {\"x\": 500, \"y\": 500},\n" +
+                    "                \"dir\": 0\n" +
+                    "            }\n" +
+                    "        ],\n" +
+                    "        \"colors\": [[244, 66, 66],[143, 244, 65]],\n" +
+                    "        \"obstacles\" :[\n" +
+                    "            {\"pos\": {\"x\": 0,\"y\": 0}, \"color\": 0},\n" +
+                    "            {\"pos\": {\"x\": 0,\"y\": 1}, \"color\": 0},\n" +
+                    "            {\"pos\": {\"x\": 0,\"y\": 2}, \"color\": 0},\n" +
+                    "            {\"pos\": {\"x\": 0,\"y\": 3}, \"color\": 0},\n" +
+                    "            {\"pos\": {\"x\": 0,\"y\": 4}, \"color\": 0},\n" +
+                    "            {\"pos\": {\"x\": 0,\"y\": 5}, \"color\": 0},\n" +
+                    "            {\"pos\": {\"x\": 0,\"y\": 6}, \"color\": 0},\n" +
+                    "            {\"pos\": {\"x\": 0,\"y\": 7}, \"color\": 0},\n" +
+                    "            {\"pos\": {\"x\": 0,\"y\": 8}, \"color\": 0},\n" +
+                    "            {\"pos\": {\"x\": 0,\"y\": 9}, \"color\": 0},\n" +
+                    "            {\"pos\": {\"x\": 0,\"y\": 10}, \"color\": 0},\n" +
+                    "            {\"pos\": {\"x\": 0,\"y\": 11}, \"color\": 0},\n" +
+                    "            {\"pos\": {\"x\": 0,\"y\": 12}, \"color\": 0},\n" +
+                    "            {\"pos\": {\"x\": 0,\"y\": 13}, \"color\": 0},\n" +
+                    "            {\"pos\": {\"x\": 0,\"y\": 14}, \"color\": 0},\n" +
+                    "            {\"pos\": {\"x\": 0,\"y\": 15}, \"color\": 0},\n" +
+                    "            {\"pos\": {\"x\": 0,\"y\": 16}, \"color\": 0},\n" +
+                    "            {\"pos\": {\"x\": 0,\"y\": 17}, \"color\": 0},\n" +
+                    "            {\"pos\": {\"x\": 300,\"y\": 300}, \"color\": 1},\n" +
+                    "            {\"pos\": {\"x\": 301,\"y\": 300}, \"color\": 1},\n" +
+                    "            {\"pos\": {\"x\": 302,\"y\": 300}, \"color\": 1},\n" +
+                    "            {\"pos\": {\"x\": 303,\"y\": 300}, \"color\": 1},\n" +
+                    "            {\"pos\": {\"x\": 304,\"y\": 300}, \"color\": 1},\n" +
+                    "            {\"pos\": {\"x\": 305,\"y\": 300}, \"color\": 1},\n" +
+                    "            {\"pos\": {\"x\": 306,\"y\": 300}, \"color\": 1},\n" +
+                    "            {\"pos\": {\"x\": 307,\"y\": 300}, \"color\": 1}\n" +
+                    "        ]\n" +
+                    "    }";
             //return getInit();
         });
     }

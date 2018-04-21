@@ -1,54 +1,41 @@
-class Communicator{
+class Communicator {
 
-    constructor(address, addressWs, updateCallback){
-        console.log(address)
-        this.address = address
-        this.addressWs = addressWs
-        this.updateCallback = updateCallback
+    constructor(address, updateCallback) {
+        this.address = address;
+        this.updateCallback = updateCallback;
     }
 
+    init (callback) {
+        $.get(this.address + "/init", (data) => {
+            console.log(data);
+            const state = JSON.parse(data);
+            callback(state);
+        });
+    };
+
     receiveUpdates(e) {
-        let msg = JSON.parse(e)
-        if(msg.type == "update")
+        let msg = JSON.parse(e);
+        if (msg.type === "update")
             this.updateCallback(msg)
     }
 
-    login(name) {
-         var resp = this.httpGet(this.address + "/login/" + name)
-         console.log("resp: " + resp)
-             if(resp.isOk)
-                 this.token = resp.token
-             else
-                 alert(resp.msg)
-    }
-
     openWebsocket() {
-        this.socket = new WebSocket(addressWs)
-        this.socket.onmessage((e) => this.receiveUpdates(e))
+        this.socket = new WebSocket(addressWs);
+        this.socket.onmessage((e) => this.receiveUpdates(e));
     }
 
-    init() {
-        this.initState = this.httpGet(this.address + "/init")
-        console.log(this.initState)
-    }
-
-    update (direction) {
+    update(direction) {
+        console.log("elo");
         let update = this._buildDirectionUpdate(direction);
         this.socket.send(JSON.stringify(update));
     }
 
-    _buildUpdate(direction){
+    _buildUpdate(direction) {
         return {
-                type: "update",
-                direction: direction,
-                token: this.token
-            }
+            type: "update",
+            direction: direction,
+            token: this.token
         }
-
-    httpGet(theUrl){
-        var xmlHttp = new XMLHttpRequest();
-        xmlHttp.open( "GET", theUrl, false ); // false for synchronous request
-        xmlHttp.send( null );
-        return JSON.stringify(xmlHttp.responseText);
     }
+
 }

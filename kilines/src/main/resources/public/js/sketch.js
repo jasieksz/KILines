@@ -7,27 +7,25 @@ const rectH = 4;
 const playerColours = [
     [0, 167, 247]
 ];
-let players;
 
+let players;
+let communicator = new Communicator(location.href.replace('/game.html',''), handleUpdate);
 
 function setup() {
     createCanvas(w, h);
     background(backgroundColor);
-    initState();
+    communicator.init(initState);
 }
 
 function draw() {
-    handleUpdate({});
     renderPlayers();
 }
 
-function initState(){
-    let state = getState();
-
+function initState(state){
+    console.log(state);
     state.obstacles.map((obs) => {
         renderPoint(obs.pos, state.colors[obs.color]);
     });
-
     players = initPlayers(state);
 }
 
@@ -41,7 +39,9 @@ function initPlayers(state) {
 }
 
 function renderPlayers() {
-    players.forEach((pl) => pl.render())
+    if(players){
+        players.forEach((pl) => pl.render())
+    }
 }
 
 function renderPoint(pos, color) {
@@ -53,12 +53,16 @@ function renderPoint(pos, color) {
 function keyPressed() {
     if (key === 'w' || key === 'W'){
         console.log('w');
+        communicator.update(0);
     } else if (key === 'd' || key === 'D'){
-        console.log('d')
+        console.log('d');
+        communicator.update(1);
     } else if (key === 's' || key === 'S'){
         console.log('s');
+        communicator.update(2);
     } else if (key === 'a' || key === 'A'){
         console.log('a');
+        communicator.update(3);
     }
 }
 
@@ -80,7 +84,6 @@ class Player {
 }
 
 function handleUpdate(update){
-    update = getUpdate();
     update.players.map( (pl) => {
             let selectedPlayer = _.find(players, (pl2) => pl2.nick === pl.nick);
             if (selectedPlayer) {
