@@ -9,7 +9,6 @@ public enum Direction {
     private int dir;
     Direction(int i) {
         dir = i;
-
     }
 
     public int getDir() {
