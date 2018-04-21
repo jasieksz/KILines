@@ -17,6 +17,12 @@ public class HelloWorld {
     public static void main(String[] args) {
         Gson gson = new Gson();
 
+        staticFiles.location("/public");
+        get("/", (req, res) -> {
+            res.redirect("/index.html");
+            return null;
+        });
+
         get("/hello", (req, res) -> {
             return "{\"message\":\"Hello\"}";
         });
