@@ -33,7 +33,9 @@ public class GameState {
     public void checkCollisions(){
         motorcycles.forEach(motorcycle -> collisionDetectionService.detect(this, motorcycle));
     }
-    public void changePlayerDirection(int id){
-        motorcycles.stream().filter(motorcycle -> true).forEach(motorcycle -> updateDirectionService.update(motorcycle));
+    public void changePlayerDirection(int playerId, Direction direction){
+        motorcycles.stream()
+                .filter(motorcycle -> motorcycle.getPlayerId().getPlayerId() == playerId)
+                .forEach(motorcycle -> updateDirectionService.updateDirection(motorcycle, direction));
     }
 }
