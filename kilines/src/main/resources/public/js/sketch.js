@@ -72,7 +72,6 @@ class Player {
         this.color = color;
         this.x = data.pos.x;
         this.y = data.pos.y;
-        this.dir = data.dir;
         this.nick = data.nick;
     }
 
@@ -89,30 +88,12 @@ function handleUpdate(update){
             if (selectedPlayer) {
                 selectedPlayer.x = pl.pos.x;
                 selectedPlayer.y = pl.pos.y;
-                selectedPlayer.dir = pl.dir;
             }
         }
     )
 }
 
 let c = 0;
-
-function getUpdate() {
-    c++;
-    return {
-        'type': 'update',
-        players: [
-            {
-                'nick': 'Andrzej',
-                'pos': {x: playerStartX, y:  playerStartY + c},
-                'dir': 0,
-                'isAlive': true,
-                'activePowerUps': {},
-                'points': 2,
-            }],
-        powerUps: []
-    }
-}
 
 function getState() {
     return {
