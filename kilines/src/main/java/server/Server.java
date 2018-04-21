@@ -6,13 +6,13 @@ import rx.Observable;
 import java.util.concurrent.TimeUnit;
 
 public class Server {
-    public static void main(String[] args){
+    public static void main(String[] args) throws Exception {
 
-        GameState gameState = new Initializer().initialize();
+        GameState gameState = new Initializer(GameUtils.boardX, GameUtils.boardy).initializeGameState();
 
         Observable.interval(GameUtils.interval, TimeUnit.MICROSECONDS)
                 .toBlocking()
-                .subscribe(tick-> {
+                .subscribe(tick -> {
                     gameState.movePlayers();
                 });
     }
