@@ -4,15 +4,15 @@ import java.util.List;
 import java.util.Map;
 
 public class GameState {
-    private Map<Point, Walls> board;
+    private Map<Point, PlayerIdentifier> board;
     private List<Motorcycle> motorcycles;
 
-    public GameState(Map<Point, Walls> board, List<Motorcycle> motorcycles) {
+    public GameState(Map<Point, PlayerIdentifier> board, List<Motorcycle> motorcycles) {
         this.board = board;
         this.motorcycles = motorcycles;
     }
 
-    public Map<Point, Walls> getBoard() {
+    public Map<Point, PlayerIdentifier> getBoard() {
         return board;
     }
 

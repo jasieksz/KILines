@@ -1,10 +1,10 @@
 package model;
 
-public class Walls {
+public class PlayerIdentifier {
     private final Color color;
     private final int playerId;
 
-    public Walls(Color color, int playerId) {
+    public PlayerIdentifier(Color color, int playerId) {
         this.color = color;
         this.playerId = playerId;
     }

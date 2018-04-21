@@ -1,13 +1,13 @@
 package model;
 
 public class Motorcycle {
-    private final int color;
+    private final PlayerIdentifier playerId;
     private Direction direction;
     private Point position;
     private int speed;
 
-    public Motorcycle(int color, Point position) {
-        this.color = color;
+    public Motorcycle(PlayerIdentifier playerId, Point position) {
+        this.playerId = playerId;
         this.position = position;
         this.direction = Direction.UP;
         this.speed = 1;
