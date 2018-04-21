@@ -10,20 +10,17 @@
         var communicator = new Communicator(location.href);
 
         function login() {
-            communicator.login();
+            communicator.login(document.getElementById("nick").value);
             communicator.init();
-            communicator.openWebsocket();
+            //communicator.openWebsocket();
             location.href = "game.html";
         }
-
     </script>
 </head>
 
 <body>
-    <form onsubmit="login()">
-        <input type="text" id="nick" name="nick">
-        <input type="submit">
-    </form>
+    <input type="text" id="nick" name="nick">
+    <button onclick="login()">
     <div id="errors"/>
 </body>
 
