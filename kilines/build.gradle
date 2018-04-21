@@ -17,4 +17,5 @@ dependencies {
     compile group: 'javax.json', name: 'javax.json-api', version: '1.0-b01'
     compile 'io.reactivex:rxjava:1.3.4'
     compile group: 'javax.json', name: 'javax.json-api', version: '1.0-b01'
+    compile group: 'javax.json', name: 'javax.json-api', version: '1.0-b01'
 }
