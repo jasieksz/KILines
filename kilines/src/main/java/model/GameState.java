@@ -28,20 +28,25 @@ public class GameState {
         return motorcycles;
     }
 
-    public void movePlayers(){
+    public void movePlayers() {
         motorcycles.stream()
                 .filter(Motorcycle::isAlive)
-                .forEach(motorcycle -> updatePositionService.update(motorcycle));
+                .forEach(motorcycle -> {
+                    updatePositionService.update(motorcycle);
+                    if(!collisionDetectionService.detect(this, motorcycle)){
+                        board.put(motorcycle.getPosition(), motorcycle.getPlayerId());
+                    }
+                });
     }
 
-    public void checkCollisions(){
+    public void checkCollisions() {
         motorcycles.stream()
                 .filter(Motorcycle::isAlive)
                 .filter(motorcycle -> collisionDetectionService.detect(this, motorcycle))
                 .forEach(motorcycle -> motorcycle.setAlive(false));
     }
 
-    public void changePlayerDirection(int playerId, Direction direction){
+    public void changePlayerDirection(int playerId, Direction direction) {
         motorcycles.stream()
                 .filter(Motorcycle::isAlive)
                 .filter(motorcycle -> motorcycle.getPlayerId().getPlayerId() == playerId)
