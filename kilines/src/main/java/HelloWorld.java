@@ -13,6 +13,8 @@ import static spark.Spark.*;
 public class HelloWorld {
     static List<String> users = new LinkedList<>();
 
+    // TODO of course can't be like that. It is probably moved to RestApi class
+    // we will sync tomorrow
     public static boolean isOccupied(String nick){
         return users.contains(nick);
     }
