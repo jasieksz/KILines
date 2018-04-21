@@ -1,6 +1,7 @@
 class Communicator{
 
     constructor(address, updateCallback){
+        console.log(address)
         this.address = address
         this.updateCallback = updateCallback
     }
@@ -21,7 +22,7 @@ class Communicator{
     }
 
     openWebsocket() {
-        this.socket = new WebSocket("ws://localhost:4567")
+        this.socket = new WebSocket(httpUrlToWebSockeUrl(this.address))
         this.socket.onmessage((e) => this.receiveUpdates(e))
     }
 
@@ -48,5 +49,9 @@ class Communicator{
         xmlHttp.open( "GET", theUrl, false ); // false for synchronous request
         xmlHttp.send( null );
         return JSON.stringify(xmlHttp.responseText);
+    }
+
+    httpUrlToWebSockeUrl(url){
+    	return url.replace(/(http)(s)?\:\/\//, "ws$2://");
     }
 }
