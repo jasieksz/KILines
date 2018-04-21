@@ -1,0 +1,30 @@
+<html>
+<head>
+  <meta charset="UTF-8">
+  <title>KILines</title>
+  <link rel="stylesheet" href="style/style.css">
+
+  <script src="js/communicator.js"></script>
+    <script>
+
+        var communicator = new Communicator(location.href);
+
+        function login() {
+            communicator.login();
+            communicator.init();
+            communicator.openWebsocket();
+            location.href = "game.html";
+        }
+
+    </script>
+</head>
+
+<body>
+    <form onsubmit="login()">
+        <input type="text" id="nick" name="nick">
+        <input type="submit">
+    </form>
+    <div id="errors"/>
+</body>
+
+</html>
