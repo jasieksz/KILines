@@ -20,8 +20,11 @@ class Communicator {
     }
 
     openWebsocket() {
-        this.socket = new WebSocket(addressWs);
-        this.socket.onmessage((e) => this.receiveUpdates(e));
+        console.log(this.addressWs)
+        this.socket = new WebSocket("ws://localhost:4567/game/websocket")
+        console.log(this.socket)
+        this.socket.onconnect = (e) => this.receiveUpdates(e)
+        this.socket.onopen = () => this.socket.send("ala ma psa")
     }
 
     update(direction) {
