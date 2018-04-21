@@ -32,9 +32,13 @@ public class GameState {
         motorcycles.stream()
                 .filter(Motorcycle::isAlive)
                 .forEach(motorcycle -> {
-                    updatePositionService.update(motorcycle);
-                    if(!collisionDetectionService.detect(this, motorcycle)){
-                        board.put(motorcycle.getPosition(), motorcycle.getPlayerId());
+                    for (int i = 0; i < motorcycle.getSpeed(); i++) {
+                        updatePositionService.update(motorcycle, 1);
+                        if (!collisionDetectionService.detect(this, motorcycle)) {
+                            board.put(motorcycle.getPosition(), motorcycle.getPlayerId());
+                        } else {
+                            break;
+                        }
                     }
                 });
     }
