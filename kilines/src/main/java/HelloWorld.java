@@ -3,19 +3,24 @@ import model.GameState;
 import model.Motorcycle;
 import model.Point;
 import server.Server;
+import server.UpdatesWebSocketHandler;
 
-import java.util.HashMap;
+import java.util.LinkedList;
 import java.util.List;
-import java.util.Map;
 
-import static spark.Spark.get;
-import static spark.Spark.staticFiles;
+import static spark.Spark.*;
 
 public class HelloWorld {
-    static Map<Integer, String> users = new HashMap<>();
+    static List<String> users = new LinkedList<>();
+
+    public static boolean isOccupied(String nick){
+        return users.contains(nick);
+    }
 
     public static void main(String[] args) {
         Gson gson = new Gson();
+
+        webSocket("/game/websocket", UpdatesWebSocketHandler.class);
 
         staticFiles.location("/public");
         get("/", (req, res) -> {
@@ -23,16 +28,16 @@ public class HelloWorld {
             return null;
         });
 
+
         get("/hello", (req, res) -> {
             return "{\"message\":\"Hello\"}";
         });
 
-        get("/login/:nick", (req, res)-> {
+        get("/login/:nick", (req, res) -> {
             String nick = req.params(":nick");
-            boolean isOccupided = false; // TODO + token
-            if (!users.containsValue(nick)) {
-                users.put(users.size(), nick);
-                return "{\"type\": \"login\", \"isOk\": true, \"token\": \"token_id\"}";
+            if (!isOccupied(nick)) {
+                users.add(nick);
+                return "{\"type\": \"login\", \"isOk\": true, \"token\": \"" + "adjfla" + "\"}";
             } else{
                 return "{\"type\": \"login\", \"isOk\": false, \"msg\": \"\"Nickname occupid\"}";
             }
@@ -81,6 +86,9 @@ public class HelloWorld {
                     "    }";
             //return getInit();
         });
+
+        init();
+
     }
 
     private static String getInit() {
