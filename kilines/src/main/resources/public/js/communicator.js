@@ -1,7 +1,9 @@
 class Communicator{
 
-    constructor(address, updateCallback){
+    constructor(address, addressWs, updateCallback){
+        console.log(address)
         this.address = address
+        this.addressWs = addressWs
         this.updateCallback = updateCallback
     }
 
@@ -21,7 +23,7 @@ class Communicator{
     }
 
     openWebsocket() {
-        this.socket = new WebSocket("ws://localhost:4567")
+        this.socket = new WebSocket(addressWs)
         this.socket.onmessage((e) => this.receiveUpdates(e))
     }
 
