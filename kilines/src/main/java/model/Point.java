@@ -1,8 +1,11 @@
 package model;
 
+import java.util.Objects;
+
 public class Point {
-    private final int x;
-    private final int y;
+
+    private final Integer x;
+    private final Integer y;
 
     public Point(int x, int y) {
         this.x = x;
@@ -15,6 +18,19 @@ public class Point {
 
     public int getY() {
         return y;
+    }
+
+//    @Override
+//    public String toString() {
+//        return "Point{" +
+//                "x=" + x +
+//                ", y=" + y +
+//                '}';
+//    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(x, y);
     }
 
     @Override

@@ -14,7 +14,7 @@ public class Motorcycle {
         this.direction = Direction.UP;
         this.speed = 1;
         this.isAlive = true;
-        this.score = score;
+        this.score = new Score();
     }
 
     public Point getPosition() {
