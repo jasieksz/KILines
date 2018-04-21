@@ -6,10 +6,25 @@ import model.PlayerIdentifier;
 import model.Point;
 import rx.Observable;
 
-import java.util.concurrent.TimeUnit;
+import com.google.gson.Gson;
+import model.GameState;
+import model.Motorcycle;
+
+import org.json.simple.*;
+import server.*;
+import model.PlayerIdentifier;
+import model.Point;
+
+import javax.json.Json;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+
+import static spark.Spark.*;
+
+import java.util.Map;
 
 public class Server {
-    public static void main(String[] args) throws Exception {
 
         GameState gameState = new GameState.InitializerBuilder(1)
                 .boardX(640)
