@@ -49,7 +49,7 @@ public class HelloWorld {
         Server server = new Server();
         StringBuilder stringBuilder = new StringBuilder();
         stringBuilder.append("type: \"init\", players: [");
-        GameState gameState = server.getGameState();
+        GameState gameState = null; // server.getGameState(); TODO FIX THIS move to server
         List<Motorcycle> motorcycles = gameState.getMotorcycles();
 
         for (Motorcycle motorcycle: motorcycles) {
