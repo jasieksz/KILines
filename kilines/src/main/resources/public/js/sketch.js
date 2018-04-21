@@ -19,6 +19,7 @@ function setup() {
 
 function draw() {
     renderPlayers();
+    scoreboard()
 }
 
 function initState(state){
@@ -42,6 +43,21 @@ function renderPlayers() {
     if(players){
         players.forEach((pl) => pl.render())
     }
+}
+
+function scoreboard() {
+    if(players && players.length > 0){
+        fill(0);
+        textFont("Orbitron");
+        textSize(18);
+        text("Score");
+        let i = 0;
+        players.map((player) =>{
+            i += 25;
+            text(player.nick + " : " + player.score, 1000, 25)
+            }
+        );
+       }
 }
 
 function renderPoint(pos, color) {
@@ -73,6 +89,7 @@ class Player {
         this.x = data.pos.x;
         this.y = data.pos.y;
         this.nick = data.nick;
+        this.score = 0;
     }
 
     render () {
