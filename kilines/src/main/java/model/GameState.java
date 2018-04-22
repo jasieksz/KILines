@@ -13,6 +13,8 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.*;
+import java.util.concurrent.ConcurrentHashMap;
+import java.util.concurrent.CopyOnWriteArrayList;
 import java.util.stream.IntStream;
 
 public class GameState {
@@ -88,8 +90,8 @@ public class GameState {
         private int y;
 
 
-        private Map<Point, String> board = new HashMap<>();
-        private List<Motorcycle> motorcycleList = new ArrayList<>();
+        private Map<Point, String> board = new ConcurrentHashMap<>();
+        private List<Motorcycle> motorcycleList = new CopyOnWriteArrayList<>();
 
         public InitializerBuilder(int mp) {
             minPlayers = mp;
