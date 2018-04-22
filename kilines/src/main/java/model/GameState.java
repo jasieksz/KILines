@@ -5,6 +5,13 @@ import service.CollisionDetectionService;
 import service.UpdateDirectionService;
 import service.UpdatePositionService;
 
+import model.powerups.Apple;
+import model.powerups.Powerup;
+import model.powerups.Thicker;
+import server.GameUtils;
+import service.*;
+
+import java.util.*;
 import java.io.BufferedReader;
 import java.io.FileReader;
 import java.io.IOException;
@@ -18,16 +25,21 @@ import java.util.stream.IntStream;
 public class GameState {
     private Map<Point, String> board;
     private List<Motorcycle> motorcycles;
+    private List<Powerup> powerups;
 
 
     public GameState(Map<Point, String> board, List<Motorcycle> motorcycles) {
         this.board = board;
         this.motorcycles = motorcycles;
+        this.powerups = powerups;
     }
 
     private UpdatePositionService updatePositionService = new UpdatePositionService();
     private CollisionDetectionService collisionDetectionService = new CollisionDetectionService();
+    private CollisionDetectionWithPowerupService collisionDetectionWithPowerService = new CollisionDetectionWithPowerupService();
     private UpdateDirectionService updateDirectionService = new UpdateDirectionService();
+    private PowerupService powerupService = new PowerupService();
+
 
     public Map<Point, String> getBoard() {
         return board;
@@ -41,14 +53,18 @@ public class GameState {
         motorcycles.add(new Motorcycle(nick, pos));
     }
 
-    private void movePlayers() {
+    public List<Powerup> getPowerups() {
+        return powerups;
+    }
+
+    public void movePlayers() {
         motorcycles.stream()
                 .filter(Motorcycle::isAlive)
                 .forEach(motorcycle -> {
                     for (int i = 0; i < motorcycle.getSpeed(); i++) {
                         updatePositionService.update(motorcycle, 1);
                         if (!collisionDetectionService.detect(this, motorcycle)) {
-                            board.put(motorcycle.getPosition(), motorcycle.getPlayerNick());
+                            leaveFootprints(motorcycle);
                         } else {
                             break;
                         }
@@ -56,11 +72,70 @@ public class GameState {
                 });
     }
 
+    public void generatePowerup() {
+        Random generator = new Random();
+        while (true) {
+            Point point = new Point(generator.nextInt(GameUtils.boardX), generator.nextInt(GameUtils.boardY));
+            if (board.containsKey(point))
+                continue;
+
+            for (int i = 0; i < powerups.size(); i++)
+                if (powerups.get(i).getPosition().equals(point))
+                    continue;
+
+            int idPowerup = generator.nextInt(2);
+            Powerup powerup = null;
+            switch (idPowerup) {
+                case 0:
+                    powerup = new Apple(point);
+                    break;
+                case 1:
+                    powerup = new Thicker(point);
+            }
+            powerups.add(powerup);
+        }
+    }
+
+
+    private void leaveFootprints(Motorcycle motorcycle) {
+        board.put(motorcycle.getPosition(), motorcycle.getPlayerNick());
+
+        if (motorcycle.getActivePowerups().contains(Thicker.class)) {
+            Direction direction = motorcycle.getDirection();
+            switch (direction) {
+                case UP:
+                case DOWN:
+                    board.put(new Point(motorcycle.getPosition().getX()-1, motorcycle.getPosition().getY()), motorcycle.getPlayerNick());
+                    board.put(new Point(motorcycle.getPosition().getX()+1, motorcycle.getPosition().getY()), motorcycle.getPlayerNick());
+                    break;
+                case LEFT:
+                case RIGHT:
+                    board.put(new Point(motorcycle.getPosition().getX(), motorcycle.getPosition().getY()-1), motorcycle.getPlayerNick());
+                    board.put(new Point(motorcycle.getPosition().getX(), motorcycle.getPosition().getY()+1), motorcycle.getPlayerNick());
+
+            }
+        }
+
+    }
+
     private void checkCollisions() {
         motorcycles.stream()
                 .filter(Motorcycle::isAlive)
                 .filter(motorcycle -> collisionDetectionService.detect(this, motorcycle))
                 .forEach(motorcycle -> motorcycle.setAlive(false));
+
+        motorcycles.stream()
+                .filter(Motorcycle::isAlive)
+                .forEach(motorcycle -> {
+                    collisionDetectionWithPowerService.detect(this, motorcycle);
+                    powerupService.checkIfPowerupIsActive(motorcycle.getActivePowerups());
+                });
+    }
+
+    public void checkCollisionsWithPowerup() {
+        motorcycles.stream()
+                .filter(Motorcycle::isAlive)
+                .forEach(motorcycle -> collisionDetectionWithPowerService.detect(this, motorcycle));
     }
 
     public void changePlayerDirection(String playerId, Direction direction) {
@@ -90,6 +165,7 @@ public class GameState {
 
         private Map<Point, String> board = new ConcurrentHashMap<>();
         private List<Motorcycle> motorcycleList = new CopyOnWriteArrayList<>();
+        private List<Powerup> powerupList = new ArrayList<>();
 
         public InitializerBuilder(int mp) {
             minPlayers = mp;
