@@ -42,7 +42,13 @@ public class Server {
                 .filter((e) -> this.isStarted)
                 .subscribe(tick -> {
                     gameState.atomicMoveCollisionUpdate();
-                    api.getHandler().broadcast(serializer.serializeMotorcycles());
+                    api.getHandler().broadcast(serializer.serializeMotorcyclesWithName());
+                    api.getHandler().broadcast(serializer.serializePowerUpsWithName());
+                });
+
+        Observable.interval(3, TimeUnit.SECONDS)
+                .subscribe(tick -> {
+                    gameState.generatePowerup();
                 });
     }
 

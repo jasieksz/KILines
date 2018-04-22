@@ -28,4 +28,16 @@ public class Serializer {
     public String serializeBoard() {
         return gson.toJson(gameState.getBoard());
     }
+
+    public String serializeMotorcyclesWithName(){
+        return "{\"players\": " + serializeMotorcycles() + "}";
+    }
+
+    public String serializePowerUpsWithName(){
+        return "{\"powerups\": " + serializePowerUps() + "}";
+    }
+
+    private String serializePowerUps(){
+        return gson.toJson(gameState.getPowerups());
+    }
 }

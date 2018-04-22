@@ -112,29 +112,29 @@ public class GameState {
                 .filter(motorcycle -> motorcycle.getPlayerNick().equals(playerId))
                 .forEach(motorcycle -> updateDirectionService.updateDirection(motorcycle, direction));
     }
-// TODO
+
     public void generatePowerup() {
         Random generator = new Random();
-        while (true) {
-            Point point = new Point(generator.nextInt(GameUtils.boardX), generator.nextInt(GameUtils.boardY));
-            if (board.containsKey(point))
+        Point point = new Point(generator.nextInt(GameUtils.boardX), generator.nextInt(GameUtils.boardY));
+
+        if (board.containsKey(point))
+            return;
+
+        for (int i = 0; i < powerups.size(); i++)
+            if (powerups.get(i).getPosition().equals(point))
                 continue;
 
-            for (int i = 0; i < powerups.size(); i++)
-                if (powerups.get(i).getPosition().equals(point))
-                    continue;
+        int idPowerup = generator.nextInt(2);
+        Powerup powerup = null;
 
-            int idPowerup = generator.nextInt(2);
-            Powerup powerup = null;
-            switch (idPowerup) {
-                case 0:
-                    powerup = new Apple(point);
-                    break;
-                case 1:
-                    powerup = new Thicker(point);
-            }
-            powerups.add(powerup);
+        switch (idPowerup) {
+            case 0:
+                powerup = new Apple(point);
+                break;
+            case 1:
+                powerup = new Thicker(point);
         }
+        powerups.add(powerup);
     }
 
 
