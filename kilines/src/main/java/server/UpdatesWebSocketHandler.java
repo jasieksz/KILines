@@ -2,6 +2,7 @@ package server;
 
 import model.Direction;
 import model.GameState;
+import model.Motorcycle;
 import org.eclipse.jetty.websocket.api.Session;
 import org.eclipse.jetty.websocket.api.annotations.OnWebSocketClose;
 import org.eclipse.jetty.websocket.api.annotations.OnWebSocketConnect;
@@ -25,6 +26,7 @@ public class UpdatesWebSocketHandler {
     public void onConnect(Session user) throws Exception {
         String nick = this.getNick(user);
         //TODO check
+        gameState.getGameUserByNickname(nick);
         this.sessions.put(user, nick);
         System.out.println(nick);
     }
@@ -32,7 +34,10 @@ public class UpdatesWebSocketHandler {
     @OnWebSocketClose
     public void onClose(Session user, int statusCode, String reason) {
         this.sessions.remove(user);
-        //TODO delete player form gameState aka kill him
+
+        String nick = this.getNick(user);
+        gameState.getGameUserByNickname(nick).ifPresent(e -> e.setAlive(false));
+
         System.out.println("Deleting " + user + "for reason: " + reason + "(" + statusCode + ")");
     }
 
@@ -40,7 +45,7 @@ public class UpdatesWebSocketHandler {
     public void onMessage(Session user, String message) {
         String nick = getNick(user);
         System.out.println(message);
-        this.gameState.changePlayerDirection(nick, Direction.valueOf(message)); // TODO change 12 for nick
+        this.gameState.changePlayerDirection(nick, Direction.valueOf(message));
     }
 
     private String getNick(Session user){

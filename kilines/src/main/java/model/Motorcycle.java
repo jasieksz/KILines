@@ -47,7 +47,7 @@ public class Motorcycle {
         this.speed = speed;
     }
 
-    public String getPlayerId() {
+    public String getPlayerNick() {
         return nick;
     }
 

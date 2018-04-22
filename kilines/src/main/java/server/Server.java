@@ -22,8 +22,6 @@ public class Server {
 
 
 
-
-
     public void run(){
         //System.out.println(serializer.serializeMotorcycles());
 

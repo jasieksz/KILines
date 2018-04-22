@@ -28,7 +28,6 @@ public class RestApi {
     public void loginUsersRequest() {
         Map<String, Integer> users = new HashMap<>();
 
-
         webSocket("/game/websocket", handler);
 
         staticFiles.location("/public");
@@ -52,8 +51,7 @@ public class RestApi {
         for (Motorcycle motorcycle: builder.getMotorcycles()){
             JSONObject item = new JSONObject();
 
-            //todo: use mapping from motorcycle identifier
-            item.put("nick", "Adam");
+            item.put("nick", motorcycle.getPlayerNick());
 
             JSONObject jsonPos = new JSONObject();
             jsonPos.put("x", motorcycle.getPosition().getX());
