@@ -3,9 +3,6 @@ package service;
 import model.Award;
 import model.GameState;
 import model.Motorcycle;
-import model.Point;
-
-import java.util.Optional;
 
 public class CollisionDetectionService {
     public boolean detect(GameState gameState, Motorcycle motorcycle) {
@@ -15,12 +12,9 @@ public class CollisionDetectionService {
                 if (gameState.getMotorcycles().get(i).getPlayerNick().equals(playerId)) {
                     gameState.getMotorcycles().get(i).getScore().addScore(Award.COLLISION.getAward());
                 }
-
             }
             return true;
         }
         return false;
-
-
     }
 }

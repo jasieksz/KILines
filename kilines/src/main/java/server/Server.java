@@ -22,6 +22,7 @@ public class Server {
             .boardX(GameUtils.boardX)
             .boardY(GameUtils.boardY)
             .addWalls()
+            .addAGHWalls()
             .build();
 
         serializer = new Serializer(getGameState());

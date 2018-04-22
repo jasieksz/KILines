@@ -83,26 +83,21 @@ public class GameState {
     private void updateBoard(){
         motorcycles.stream()
                 .filter(Motorcycle::isAlive)
-                .forEach(motorcycle -> {
-                        //System.out.println(board.get(motorcycle.getPlayerNick()));
-                        board.put(motorcycle.getPosition(), motorcycle.getPlayerNick());
-                });
+                .forEach(motorcycle -> board.put(motorcycle.getPosition(), motorcycle.getPlayerNick()));
     }
 
     private void checkCollisions() {
         motorcycles.stream()
+                .filter(Motorcycle::isAlive)
                 .filter(motorcycle -> collisionDetectionService.detect(this, motorcycle))
-                .forEach(motorcycle -> {
-                    motorcycle.setAlive(false);
-                    System.out.println("COLISION " + motorcycle.getPlayerNick());
-                });
+                .forEach(motorcycle -> motorcycle.setAlive(false));
 
-//        motorcycles.stream()
-//                .filter(Motorcycle::isAlive)
-//                .forEach(motorcycle -> {
-//                    collisionDetectionWithPowerService.detect(this, motorcycle);
-//                    powerupService.checkIfPowerupIsActive(motorcycle.getActivePowerups());
-//                });
+        motorcycles.stream()
+                .filter(Motorcycle::isAlive)
+                .forEach(motorcycle -> {
+                    collisionDetectionWithPowerService.detect(this, motorcycle);
+                    powerupService.checkIfPowerupIsActive(motorcycle.getActivePowerups());
+                });
     }
 
     public void atomicMoveCollisionUpdate() {

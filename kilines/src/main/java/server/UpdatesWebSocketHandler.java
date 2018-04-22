@@ -49,7 +49,6 @@ public class UpdatesWebSocketHandler {
     public void onMessage(Session user, String message) {
         try {
             String nick = getNick(user);
-            System.out.println(nick);
             String newMsg = message.replace("\"", "");
             this.gameState.changePlayerDirection(nick, Direction.valueOf(newMsg));
         }catch (Exception e) {
