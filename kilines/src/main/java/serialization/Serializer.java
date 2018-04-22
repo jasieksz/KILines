@@ -23,6 +23,10 @@ public class Serializer {
         this.gameState = gameState;
     }
 
+    public String serializeGameState() {
+        return gson.toJson(gameState);
+    }
+
     public String serializeMotorcycles(){
         return gson.toJson(gameState.getMotorcycles());
     }
