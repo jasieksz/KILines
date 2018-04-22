@@ -117,15 +117,19 @@ public class GameState {
             return this;
         }
 
-        public InitializerBuilder addAGHWalls() throws IOException {
-            createAGHThemeWalls();
+        public InitializerBuilder addAGHWalls() {
+            try {
+                createAGHThemeWalls();
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
             return this;
         }
 
         public GameState build() {
-            while (motorcycleList.size() < minPlayers){
-                addBot(new Point(0,0), GameUtils.WALL); // TODO: Prepare for robot uprising
-            }
+//            while (motorcycleList.size() < minPlayers){
+//                addBot(new Point(0,0), GameUtils.WALL); // TODO: Prepare for robot uprising
+//            }
             return new GameState(this.board, this.motorcycleList);
         }
 
