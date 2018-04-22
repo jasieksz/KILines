@@ -56,6 +56,7 @@ public class UpdatesWebSocketHandler {
             this.gameState.changePlayerDirection(nick, Direction.valueOf(message));
         }catch (Exception e) {
             user.close();
+            e.printStackTrace();
         }
     }
 
