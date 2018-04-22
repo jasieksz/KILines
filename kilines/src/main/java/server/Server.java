@@ -11,34 +11,25 @@ import serialization.Serializer;
 import java.util.concurrent.TimeUnit;
 
 public class Server {
-    public static void main(String[] args) throws Exception {
+    private GameState gameState = null;
+    private GameState.InitializerBuilder builder = new GameState.InitializerBuilder(4)
+            .boardX(GameUtils.boardX)
+            .boardY(GameUtils.boardY)
+            .addWalls();
 
-        GameState gameState = new GameState.InitializerBuilder(2)
-                .boardX(GameUtils.boardX)
-                .boardY(GameUtils.boardY)
-                .addWalls()
-                .addAGHWalls()
-                .addPlayer(new Point(100, 100), "Jasiek")
-                .addPlayer(new Point(400, 400), "Stasiek")
-                .build();
 
-        Serializer ser = new Serializer(gameState);
-        System.out.println(ser.serializeGameState());
 
+    public void run(){
         RestApi api = new RestApi(gameState);
         api.loginUsersRequest();
 
+        Observable.interval(GameUtils.interval, TimeUnit.MICROSECONDS)
+                .subscribe(tick -> {
+                    gameState.atomicMoveAndCollision();
+                });
+    }
 
-//        Observable.interval(GameUtils.interval, TimeUnit.MICROSECONDS)
-//                .toBlocking()
-//                .subscribe(tick -> {
-//                    gameState.movePlayers();
-//                });
-
-//        while(true){
-//            gameState.movePlayers();
-//            gameState.checkCollisions();
-//            api.getWebsocketHandler.broadcast(Serialzier(gameState));
-//        }
+    public GameState getGameState() {
+        return gameState != null ? gameState : builder.build();
     }
 }

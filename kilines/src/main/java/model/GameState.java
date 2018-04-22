@@ -38,7 +38,7 @@ public class GameState {
         return;
     }
 
-    public void movePlayers() {
+    private void movePlayers() {
         motorcycles.stream()
                 .filter(Motorcycle::isAlive)
                 .forEach(motorcycle -> {
@@ -53,7 +53,7 @@ public class GameState {
                 });
     }
 
-    public void checkCollisions() {
+    private void checkCollisions() {
         motorcycles.stream()
                 .filter(Motorcycle::isAlive)
                 .filter(motorcycle -> collisionDetectionService.detect(this, motorcycle))
@@ -65,6 +65,11 @@ public class GameState {
                 .filter(Motorcycle::isAlive)
                 .filter(motorcycle -> motorcycle.getPlayerId().equals(playerId))
                 .forEach(motorcycle -> updateDirectionService.updateDirection(motorcycle, direction));
+    }
+
+    public void atomicMoveAndCollision(){
+        movePlayers();
+        checkCollisions();
     }
 
     /*
