@@ -5,6 +5,9 @@ import service.CollisionDetectionService;
 import service.UpdateDirectionService;
 import service.UpdatePositionService;
 
+import java.io.BufferedReader;
+import java.io.FileReader;
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -108,7 +111,7 @@ public class GameState {
             return this;
         }
 
-        public InitializerBuilder addAGHWalls(){
+        public InitializerBuilder addAGHWalls() throws IOException {
             createAGHThemeWalls();
             return this;
         }
@@ -136,7 +139,22 @@ public class GameState {
             });
         }
 
-        private void createAGHThemeWalls(){
+        private void createAGHThemeWalls() throws IOException {
+            BufferedReader br = new BufferedReader(new FileReader("/board_image/walls_to_add.txt"));
+            try {
+                String line = br.readLine();
+
+                while (line != null) {
+                    System.out.println(line);
+                    String[] point = line.split("\\s+");
+
+                    board.put(new Point(Integer.parseInt(point[0]), Integer.parseInt(point[1])), GameUtils.WALL);
+
+                    line = br.readLine();
+                }
+            } finally {
+                br.close();
+            }
             return;
         }
 
