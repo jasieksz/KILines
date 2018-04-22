@@ -33,8 +33,8 @@ public class GameState {
         return motorcycles;
     }
 
-    public void addPlayer(String id, Point pos){
-        motorcycles.add(new Motorcycle(id, pos));
+    public void addPlayer(String nick, Point pos){
+        motorcycles.add(new Motorcycle(nick, pos));
         return;
     }
 

@@ -1,5 +1,6 @@
 package server;
 
+import controller.RestApi;
 import model.Color;
 import model.GameState;
 import model.PlayerIdentifier;
@@ -24,6 +25,8 @@ public class Server {
         Serializer ser = new Serializer(gameState);
         System.out.println(ser.serializeGameState());
 
+        RestApi api = new RestApi(gameState);
+        api.loginUsersRequest();
 
 
 //        Observable.interval(GameUtils.interval, TimeUnit.MICROSECONDS)
@@ -35,7 +38,7 @@ public class Server {
 //        while(true){
 //            gameState.movePlayers();
 //            gameState.checkCollisions();
-//            broadcast(Serialzier(gameState));
+//            api.getWebsocketHandler.broadcast(Serialzier(gameState));
 //        }
     }
 }
