@@ -52,10 +52,10 @@ public class UpdatesWebSocketHandler {
                 .toString();
     }
 
-    public void broadcast(GameState state){
+    public void broadcast(String message){
         sessions.keySet().stream().filter(Session::isOpen).forEach(session -> {
             try {
-                session.getRemote().sendString(String.valueOf(state));
+                session.getRemote().sendString(message);
             } catch (Exception e) {
                 e.printStackTrace();
             }
