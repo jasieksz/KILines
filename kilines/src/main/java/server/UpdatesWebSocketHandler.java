@@ -11,11 +11,12 @@ import org.eclipse.jetty.websocket.api.annotations.WebSocket;
 
 import java.util.HashMap;
 import java.util.Map;
+import java.util.concurrent.ConcurrentHashMap;
 
 @WebSocket
 public class UpdatesWebSocketHandler {
 
-    private Map<Session, String> sessions = new HashMap<>();
+    private Map<Session, String> sessions = new ConcurrentHashMap<>();
     private GameState gameState;
 
     public UpdatesWebSocketHandler(GameState gameState){
