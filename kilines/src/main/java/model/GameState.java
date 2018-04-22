@@ -1,5 +1,6 @@
 package model;
 
+import model.powerups.Powerup;
 import server.GameUtils;
 import service.CollisionDetectionService;
 import service.UpdateDirectionService;
@@ -18,6 +19,7 @@ import java.io.IOException;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
+import java.util.Random;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.CopyOnWriteArrayList;
 import java.util.stream.IntStream;
@@ -63,13 +65,9 @@ public class GameState {
                 .forEach(motorcycle -> {
                     for (int i = 0; i < motorcycle.getSpeed(); i++) {
                         updatePositionService.update(motorcycle, 1);
-                        if (!collisionDetectionService.detect(this, motorcycle)) {
-                            leaveFootprints(motorcycle);
-                        } else {
-                            break;
-                        }
                     }
                 });
+
     }
 
     public void generatePowerup() {
@@ -118,6 +116,13 @@ public class GameState {
 
     }
 
+    private void updateBoard(){
+        motorcycles.stream()
+                .filter(Motorcycle::isAlive)
+                .forEach(motorcycle ->
+                        board.put(motorcycle.getPosition(), motorcycle.getPlayerNick()));
+    }
+
     private void checkCollisions() {
         motorcycles.stream()
                 .filter(Motorcycle::isAlive)
@@ -145,9 +150,10 @@ public class GameState {
                 .forEach(motorcycle -> updateDirectionService.updateDirection(motorcycle, direction));
     }
 
-    public void atomicMoveAndCollision() {
+    public void atomicMoveCollisionUpdate() {
         movePlayers();
         checkCollisions();
+        updateBoard();
     }
 
     public Optional<Motorcycle> getGameUserByNickname(String nick){

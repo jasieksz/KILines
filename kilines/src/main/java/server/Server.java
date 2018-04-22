@@ -24,13 +24,11 @@ public class Server {
     public void run(){
         api = new RestApi(getGameState());
         api.loginUsersRequest();
-        System.out.println(serializer.serializeMotorcycles());
 
         Observable.interval(GameUtils.interval, TimeUnit.MILLISECONDS)
                 .subscribe(tick -> {
-                    gameState.atomicMoveAndCollision();
+                    gameState.atomicMoveCollisionUpdate();
                     api.getHandler().broadcast(serializer.serializeMotorcycles());
-                    System.out.println(serializer.serializeMotorcycles());
                 });
     }
 
