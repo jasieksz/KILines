@@ -12,6 +12,7 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.*;
 import java.util.stream.IntStream;
 
 public class GameState {
@@ -38,7 +39,6 @@ public class GameState {
 
     public void addPlayer(String nick, Point pos){
         motorcycles.add(new Motorcycle(nick, pos));
-        return;
     }
 
     private void movePlayers() {
@@ -48,7 +48,7 @@ public class GameState {
                     for (int i = 0; i < motorcycle.getSpeed(); i++) {
                         updatePositionService.update(motorcycle, 1);
                         if (!collisionDetectionService.detect(this, motorcycle)) {
-                            board.put(motorcycle.getPosition(), motorcycle.getPlayerId());
+                            board.put(motorcycle.getPosition(), motorcycle.getPlayerNick());
                         } else {
                             break;
                         }
@@ -66,13 +66,17 @@ public class GameState {
     public void changePlayerDirection(String playerId, Direction direction) {
         motorcycles.stream()
                 .filter(Motorcycle::isAlive)
-                .filter(motorcycle -> motorcycle.getPlayerId().equals(playerId))
+                .filter(motorcycle -> motorcycle.getPlayerNick().equals(playerId))
                 .forEach(motorcycle -> updateDirectionService.updateDirection(motorcycle, direction));
     }
 
-    public void atomicMoveAndCollision(){
+    public void atomicMoveAndCollision() {
         movePlayers();
         checkCollisions();
+    }
+
+    public Optional<Motorcycle> getGameUserByNickname(String nick){
+       return motorcycles.stream().filter(e-> e.getPlayerNick().equals(nick)).findFirst();
     }
 
     /*

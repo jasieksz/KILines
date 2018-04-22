@@ -9,7 +9,7 @@ public class CollisionDetectionService {
         if (gameState.getBoard().containsKey(motorcycle.getPosition())) {
             final String playerId = gameState.getBoard().get(motorcycle.getPosition());
             for (int i = 0; i < gameState.getMotorcycles().size(); i++) {
-                if (gameState.getMotorcycles().get(i).getPlayerId().equals(playerId)) {
+                if (gameState.getMotorcycles().get(i).getPlayerNick().equals(playerId)) {
                     gameState.getMotorcycles().get(i).getScore().addScore(Award.COLLISION.getAward());
                 }
 

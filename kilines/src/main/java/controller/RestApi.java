@@ -28,7 +28,6 @@ public class RestApi {
     public void loginUsersRequest() {
         Map<String, Integer> users = new HashMap<>();
 
-
         webSocket("/game/websocket", handler);
 
         staticFiles.location("/public");
@@ -47,24 +46,36 @@ public class RestApi {
         JSONObject json = new JSONObject();
         json.put("type", "init");
 
-        JSONArray array = new JSONArray();
+        JSONArray arrayMotorcycle = new JSONArray();
 
-        //
         for (Motorcycle motorcycle: builder.getMotorcycles()){
             JSONObject item = new JSONObject();
 
-            //todo: use mapping from motorcycle identifier
-            item.put("nick", "Adam");
+            item.put("nick", motorcycle.getPlayerNick());
 
             JSONObject jsonPos = new JSONObject();
             jsonPos.put("x", motorcycle.getPosition().getX());
             jsonPos.put("y", motorcycle.getPosition().getY());
 
             item.put("pos", jsonPos);
-            array.add(item);
+            arrayMotorcycle.add(item);
         }
+        json.put("players", arrayMotorcycle);
 
-        json.put("players", array);
+
+        JSONArray arrayObstacles = new JSONArray();
+        for (Map.Entry<Point, String> entry : builder.getBoard().entrySet()) {
+            JSONObject item = new JSONObject();
+
+            JSONObject jsonPos = new JSONObject();
+            jsonPos.put("x", entry.getKey().getX());
+            jsonPos.put("y", entry.getKey().getY());
+            item.put("pos", jsonPos);
+
+            arrayObstacles.add(item);
+        }
+        json.put("obstacles", arrayObstacles);
+
         return json;
     }
 
