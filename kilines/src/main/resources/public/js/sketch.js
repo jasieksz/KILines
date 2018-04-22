@@ -16,6 +16,7 @@ let deathSound;
 
 let players;
 let communicator = new Communicator(location.href.replace('/game.html',''), handleUpdate);
+let powerUps = [];
 
 function preload() {
     deathSound = loadSound('sound/explosion.mp3');
@@ -60,7 +61,7 @@ function scoreboard() {
         players.map((player) =>{
             let scoreCounter = $('#' + player.nick);
             if (scoreCounter.length){
-                scoreCounter.val(player.score);
+                scoreCounter.html(player.score);
             } else {
                 $('#scoreboard').append('<tr><td>' + player.nick + '</td>' + '<td id=' + player.nick + '>' + player.score +'</td></tr>')
             }
@@ -86,45 +87,15 @@ function keyPressed() {
     }
 }
 
-class Player {
-
-    constructor(data , color) {
-        this.color = color;
-        this.x = data.pos.x;
-        this.y = data.pos.y;
-        this.nick = data.nick;
-        this.score = 0;
-        this.isAlive = true;
-    }
-
-    render () {
-        stroke(this.color);
-        fill(this.color);
-        rect(this.x * scale, this.y * scale, rectW, rectH);
-    }
-
-}
-
-
-class PowerUp {
-
-    constructor(data) {
-        this.id = color;
-        this.color = [238, 244, 66];
-        this.x = data.pos.x;
-        this.y = data.pos.y;
-    }
-
-    render () {
-        stroke(this.color);
-        fill(this.color);
-        rect(this.x * scale, this.y * scale, rectW, rectH);
-    }
-
-}
-
 function handleUpdate(update){
-    updatePlayers(update);
+    if (update.players) {
+        console.log(update.players);
+        updatePlayers(update.players);
+    }
+    else if(update.powerups) {
+        console.log(update.powerups);
+        updatePowerUps(update.powerups);
+    }
 }
 
 function updatePlayers(updates) {
@@ -133,6 +104,7 @@ function updatePlayers(updates) {
             if (selectedPlayer) {
                 selectedPlayer.x = pl.pos.x;
                 selectedPlayer.y = pl.pos.y;
+                selectedPlayer.score = pl.score.score;
                 if (selectedPlayer.isAlive !== pl.isAlive) kill(selectedPlayer);
                 selectedPlayer.isAlive = pl.isAlive;
             } else {
@@ -144,8 +116,26 @@ function updatePlayers(updates) {
     )
 }
 
-function updatePowerUps(powerUps) {
-    powerUps.map();
+function updatePowerUps(updates) {
+    powerUps.map((pu) => pu.updated = false);
+    if (updates) {
+        updates.map((up) => {
+                let selected = _.find(powerUps, (pu) => pu.x === up.position.x && pu.y === up.position.y);
+                if (selected) {
+                    selected.updated = true
+                } else {
+                    let power = new PowerUp(up);
+                    powerUps.push(power);
+                    power.render();
+                }
+            }
+        );
+    }
+    powerUps.filter((pu) => !pu.updated).forEach((pu) => {
+        pu.hide();
+        let indx = powerUps.indexOf(pu);
+        powerUps.splice(indx, 1)
+    })
 }
 
 function kill(player) {

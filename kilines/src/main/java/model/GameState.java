@@ -1,26 +1,15 @@
 package model;
 
-import model.powerups.Powerup;
-import server.GameUtils;
-import service.CollisionDetectionService;
-import service.UpdateDirectionService;
-import service.UpdatePositionService;
-
 import model.powerups.Apple;
 import model.powerups.Powerup;
 import model.powerups.Thicker;
 import server.GameUtils;
 import service.*;
 
-import java.util.*;
 import java.io.BufferedReader;
 import java.io.FileReader;
 import java.io.IOException;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-import java.util.Optional;
-import java.util.Random;
+import java.util.*;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.CopyOnWriteArrayList;
 import java.util.stream.IntStream;
@@ -124,7 +113,7 @@ public class GameState {
             if (powerups.get(i).getPosition().equals(point))
                 continue;
 
-        int idPowerup = generator.nextInt(2);
+        int idPowerup = generator.nextInt(1);
         Powerup powerup = null;
 
         switch (idPowerup) {

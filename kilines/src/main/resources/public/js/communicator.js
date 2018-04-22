@@ -26,7 +26,8 @@ class Communicator {
     }
 
     openWebsocket() {
-        this.socket = new WebSocket("ws://localhost:4567/game/websocket");
+        let wsAddress = this.address.replace('http', 'ws') + '/game/websocket';
+        this.socket = new WebSocket(wsAddress);
         this.socket.onmessage = (e) => this.receiveUpdates(e);
     }
 
