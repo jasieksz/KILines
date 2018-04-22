@@ -29,33 +29,43 @@ public class UpdatesWebSocketHandler {
         //TODO check
         gameState.getGameUserByNickname(nick);
         this.sessions.put(user, nick);
-        System.out.println(nick);
+        System.out.println("new connection: " + nick);
+        System.out.println("session map: " + sessions.entrySet());
     }
 
     @OnWebSocketClose
     public void onClose(Session user, int statusCode, String reason) {
         this.sessions.remove(user);
 
-        String nick = this.getNick(user);
-        gameState.getGameUserByNickname(nick).ifPresent(e -> e.setAlive(false));
+        try {
+            String nick = this.getNick(user);
+            gameState.getGameUserByNickname(nick).ifPresent(e -> e.setAlive(false));
 
-        System.out.println("Deleting " + user + "for reason: " + reason + "(" + statusCode + ")");
+            System.out.println("Deleting " + user + "for reason: " + reason + "(" + statusCode + ")");
+            System.out.println("seesion map: " + sessions.entrySet());
+        }catch(Exception e){
+            e.printStackTrace();
+        }
     }
 
     @OnWebSocketMessage
     public void onMessage(Session user, String message) {
-        String nick = getNick(user);
-        System.out.println(message);
-        this.gameState.changePlayerDirection(nick, Direction.valueOf(message));
+        try {
+            String nick = getNick(user);
+            System.out.println("got message: " + message);
+            this.gameState.changePlayerDirection(nick, Direction.valueOf(message));
+        }catch (Exception e) {
+            user.close();
+        }
     }
 
-    private String getNick(Session user){
+    private String getNick(Session user) throws Exception {
         return user.getUpgradeRequest()
                 .getCookies()
                 .stream()
                 .filter(c -> c.getName().equals("nick"))
                 .findFirst()
-                .get()
+                .orElseThrow(() -> new Exception("dsfa"))
                 .toString();
     }
 
