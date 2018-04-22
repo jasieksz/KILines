@@ -79,7 +79,7 @@ public class GameStateTest {
         Map<Point,String> board = gameState.getBoard();
         board.put(point,motorcycle.getPlayerNick());
 
-        GameState gameState1 = new GameState(board,motorcycles);
+        GameState gameState1 = new GameState(board, motorcycles);
 
         gameState1.movePlayers();
         UpdatePositionService service = new UpdatePositionService();
@@ -89,9 +89,11 @@ public class GameStateTest {
            if (moto.getPlayerNick().equals(player)) {
                int x = moto.getPosition().getX();
                int y = moto.getPosition().getY();
+
                service.update(moto, 1);
+
                assertEquals(x,moto.getPosition().getX());
-               assertEquals(y-1,moto.getPosition().getY());
+               assertEquals(y - 1, moto.getPosition().getY());
             }
         }
     }

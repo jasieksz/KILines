@@ -20,8 +20,6 @@ public class CollisionDetectionServiceTest{
         Map<Point, String> board = gameState.getBoard();
         board.put(point,playerNick);
 
-        PlayerIdentifier id = new PlayerIdentifier(Color.RED,10);
-
         Motorcycle moto = new Motorcycle(playerNick, point);
         List<Motorcycle> motorcycles = gameState.getMotorcycles();
         motorcycles.add(moto);
@@ -50,6 +48,7 @@ public class CollisionDetectionServiceTest{
             Score score = gameState.getMotorcycles().get(i).getScore();
             int scoreInt;
             scoreInt = score.getScore();
+            collisionDetectionService.detect(gameState,moto);
             String nick = gameState.getMotorcycles().get(i).getPlayerNick();
             if (nick.equals(game.getBoard().get(moto))){
                 assertEquals(scoreInt + Award.COLLISION.getAward(),score);

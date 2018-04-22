@@ -23,7 +23,7 @@ public class UpdatePositionServiceTest {
         UpdatePositionService positionService = new UpdatePositionService();
         positionService.update(motorcycle,delta);
 
-        Point point = new Point(x+5,y);
+        Point point = new Point(x + 5, y);
 
         assertEquals(point.getX(),motorcycle.getPosition().getX());
         assertEquals(point.getY(),motorcycle.getPosition().getY());
