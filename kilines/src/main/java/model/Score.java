@@ -11,4 +11,8 @@ public class Score {
     public void addScore(int points) {
         this.score += points;
     }
+
+    public int getScore(){
+        return score;
+    }
 }

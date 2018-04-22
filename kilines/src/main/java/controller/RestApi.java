@@ -6,6 +6,7 @@ import org.json.simple.JSONObject;
 
 import java.util.HashMap;
 import java.util.Map;
+import java.util.Random;
 
 import static spark.Spark.*;
 
@@ -16,9 +17,9 @@ public class RestApi {
             .boardX(640)
             .boardY(480);
 
-    public void loginUsersRequest() {
+    Map<String, Integer> users = new HashMap<>();
 
-        Map<String, Integer> users = new HashMap<>();
+    public void loginUsersRequest() {
 
         get("/login/:nick", (req, res)-> {
             String nick = req.params(":nick");
@@ -34,12 +35,10 @@ public class RestApi {
 
         JSONArray array = new JSONArray();
 
-        //
         for (Motorcycle motorcycle: builder.getMotorcycles()){
             JSONObject item = new JSONObject();
 
-            //todo: use mapping from motorcycle identifier
-            item.put("nick", "Adam");
+            item.put("nick", getNickname(motorcycle));
 
             JSONObject jsonPos = new JSONObject();
             jsonPos.put("x", motorcycle.getPosition().getX());
@@ -61,16 +60,38 @@ public class RestApi {
         json.put("isOk", isOk);
 
         if(isOk){
-            //todo: change token generation
-            json.put("token", 33);
-            users.put(nick, 33);
+            int token = generateToken();
+            json.put("token",token);
+            users.put(nick,token);
 
-            builder.addPlayer(new Point(28,12), new PlayerIdentifier(Color.BLUE, 33));
+            builder.addPlayer(new Point(28,12), new PlayerIdentifier(Color.BLUE, token));
 
         }else {
             json.put("msg", "Nickname occupied");
         }
         return json;
+    }
+
+    private int generateToken(){
+        Random random = new Random();
+        int token;
+        do {
+            token = random.nextInt(100);
+        } while(users.containsValue(token));
+
+        return token;
+    }
+
+    private String getNickname(Motorcycle motorcycle) {
+        int playerId = motorcycle.getPlayerId().getPlayerId();
+        boolean hasId = users.containsValue(playerId);
+        String nickName = "";
+        for (Map.Entry<String, Integer> entry : users.entrySet()) {
+            if (entry.getValue().equals(playerId)) {
+                nickName = entry.getKey();
+            }
+        }
+        return nickName;
     }
 
 }

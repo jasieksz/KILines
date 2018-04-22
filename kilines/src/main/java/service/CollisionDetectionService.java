@@ -12,12 +12,9 @@ public class CollisionDetectionService {
                 if (gameState.getMotorcycles().get(i).getPlayerId().getPlayerId() == playerId) {
                     gameState.getMotorcycles().get(i).getScore().addScore(Award.COLLISION.getAward());
                 }
-
             }
             return true;
         }
         else return false;
-
-
     }
 }

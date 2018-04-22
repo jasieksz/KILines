@@ -3,7 +3,7 @@ import model.GameState;
 import model.Motorcycle;
 import model.Point;
 import server.Server;
-import server.UpdatesWebSocketHandler;
+//import server.UpdatesWebSocketHandler;
 
 import java.util.LinkedList;
 import java.util.List;
@@ -22,7 +22,7 @@ public class HelloWorld {
     public static void main(String[] args) {
         Gson gson = new Gson();
 
-        webSocket("/game/websocket", UpdatesWebSocketHandler.class);
+        //webSocket("/game/websocket", UpdatesWebSocketHandler.class);
 
         staticFiles.location("/public");
         get("/", (req, res) -> {
