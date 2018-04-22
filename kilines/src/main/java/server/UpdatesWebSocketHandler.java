@@ -14,7 +14,7 @@ import java.util.Map;
 @WebSocket
 public class UpdatesWebSocketHandler {
 
-    private Map<Session, String> sessions = new HashMap<Session, String>();
+    private Map<Session, String> sessions = new HashMap<>();
     private GameState gameState;
 
     public UpdatesWebSocketHandler(GameState gameState){
