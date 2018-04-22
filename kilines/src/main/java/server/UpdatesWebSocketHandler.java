@@ -37,10 +37,7 @@ public class UpdatesWebSocketHandler {
         this.sessions.remove(user);
 
         String nick = this.getNick(user);
-        gameState.getGameUserByNickname(nick).ifPresent(e -> {
-            System.out.println("hahahhahhah");
-            e.setAlive(false);});
-
+        gameState.getGameUserByNickname(nick).ifPresent(e -> e.setAlive(false));
 
         System.out.println("Deleting " + user + "for reason: " + reason + "(" + statusCode + ")");
     }

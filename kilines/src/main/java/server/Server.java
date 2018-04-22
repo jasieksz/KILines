@@ -25,7 +25,7 @@ public class Server {
         api = new RestApi(getGameState());
         api.loginUsersRequest();
 
-        Observable.interval(GameUtils.interval, TimeUnit.MICROSECONDS)
+        Observable.interval(GameUtils.interval, TimeUnit.MILLISECONDS)
                 .subscribe(tick -> {
                     gameState.atomicMoveAndCollision();
                     api.getHandler().broadcast(serializer.serializeMotorcycles());
