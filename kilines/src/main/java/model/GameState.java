@@ -16,6 +16,7 @@ import java.util.*;
 import java.io.BufferedReader;
 import java.io.FileReader;
 import java.io.IOException;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
@@ -28,11 +29,17 @@ public class GameState {
     private Map<Point, String> board;
     private List<Motorcycle> motorcycles;
     private List<Powerup> powerups = new ArrayList<>();
+    private Map<Point, String> initialBoard;
 
 
     public GameState(Map<Point, String> board, List<Motorcycle> motorcycles) {
         this.board = board;
-        this.motorcycles = motorcycles;;
+        this.initialBoard = board;
+        this.motorcycles = motorcycles;
+    }
+
+    public void clearWalls(){
+        this.board = new HashMap<>(this.initialBoard);
     }
 
     private UpdatePositionService updatePositionService = new UpdatePositionService();
