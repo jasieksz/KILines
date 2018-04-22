@@ -1,10 +1,24 @@
-const w = 1280, h = 960;
+const w = 640, h = 480;
 const backgroundColor = 23;
 const rectW = 4;
 const rectH = 4;
 const playerColours = [
+    [0, 167, 247],
+    [0, 167, 247],
+    [0, 167, 247],
+    [0, 167, 247],
+    [0, 167, 247],
+    [0, 167, 247],
+    [0, 167, 247],
+    [0, 167, 247],
+    [0, 167, 247],
+    [0, 167, 247],
+    [0, 167, 247],
+    [0, 167, 247],
     [0, 167, 247]
 ];
+const obstacleColour = [0, 0, 0];
+
 let deathSound;
 
 let players;
@@ -28,7 +42,7 @@ function draw() {
 
 function initState(state){
     state.obstacles.map((obs) => {
-        renderPoint(obs.pos, state.colors[obs.color]);
+        renderPoint(obs.pos);
     });
     players = initPlayers(state);
 }
@@ -64,16 +78,16 @@ function scoreboard() {
        }
 }
 
-function renderPoint(pos, color) {
+function renderPoint(pos) {
     noStroke();
-    fill(color);
-    rect(pos.x, pos.y, rectW, rectH)
+    fill(obstacleColour);
+    rect(pos.x, pos.y, 1, 1)
 }
 
 function keyPressed() {
     if (key === 'w' || key === 'W'){
         console.log('w');
-        communicator.update("UP");
+        communicator.update(1);
     } else if (key === 'd' || key === 'D'){
         console.log('d');
         communicator.update("RIGHT");
@@ -105,6 +119,7 @@ class Player {
 }
 
 function handleUpdate(update){
+    console.log(update);
     update.players.map( (pl) => {
             let selectedPlayer = _.find(players, (pl2) => pl2.nick === pl.nick);
             if (selectedPlayer) {
