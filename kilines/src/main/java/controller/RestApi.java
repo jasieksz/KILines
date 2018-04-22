@@ -117,8 +117,8 @@ public class RestApi {
 
         if(isOk){
             json.put("token", 33);
-            int x = ThreadLocalRandom.current().nextInt(0, GameUtils.boardX);
-            int y = ThreadLocalRandom.current().nextInt(0, GameUtils.boardY);
+            int x = ThreadLocalRandom.current().nextInt(20, GameUtils.boardX-20);
+            int y = ThreadLocalRandom.current().nextInt(20, GameUtils.boardY-20);
 
             gameState.addPlayer(nick, new Point(x,y));
 
