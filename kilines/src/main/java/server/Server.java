@@ -1,5 +1,6 @@
 package server;
 
+import controller.RestApi;
 import model.Color;
 import model.GameState;
 import model.PlayerIdentifier;
@@ -23,6 +24,8 @@ public class Server {
 
         Serializer ser = new Serializer(gameState);
         System.out.println(ser.serializeGameState());
+
+        new RestApi(gameState).loginUsersRequest();
 
 
 

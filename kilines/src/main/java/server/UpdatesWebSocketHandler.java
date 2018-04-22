@@ -17,17 +17,31 @@ import java.util.List;
 
 @WebSocket
 public class UpdatesWebSocketHandler {
-    private String sender, msg;
+
     private List<Session> sessions = new LinkedList<>();
+    private GameState gameState;
+
+    public UpdatesWebSocketHandler(GameState gameState){
+        this.gameState = gameState;
+    }
 
     @OnWebSocketConnect
     public void onConnect(Session user) throws Exception {
+        String nick = user.getUpgradeRequest()
+                .getCookies()
+                .stream()
+                .filter(c -> c.getName().equals("nick")).findFirst()
+                .get()
+                .toString();
+        //TODO check
         this.sessions.add(user);
-        System.out.println(user);
+        System.out.println(nick);
     }
 
     @OnWebSocketClose
     public void onClose(Session user, int statusCode, String reason) {
+        this.sessions.remove(user);
+        System.out.println("Deleting " + user + "for reason: " + reason + "(" + statusCode + ")");
     }
 
     @OnWebSocketMessage
@@ -37,7 +51,7 @@ public class UpdatesWebSocketHandler {
         /* parse maessage nad affect players somehow */
     }
 
-    public void broadcastState(BoardState state){
+    public void broadcast(GameState state){
         sessions.stream().filter(Session::isOpen).forEach(session -> {
             try {
                 session.getRemote().sendString(String.valueOf(state));

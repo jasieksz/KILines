@@ -10,6 +10,7 @@
     <script>
 
         const loginReq = function (name, callback) {
+            document.cookie = "nick=" + name;
             $.get(location.href + "/login/" + name, callback());
         };
 

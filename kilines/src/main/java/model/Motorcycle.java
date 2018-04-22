@@ -1,5 +1,7 @@
 package model;
 
+import org.eclipse.jetty.websocket.api.Session;
+
 public class Motorcycle {
     private final String nick;
     private Direction dir;

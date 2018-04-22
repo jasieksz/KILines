@@ -3,6 +3,7 @@ package controller;
 import model.*;
 import org.json.simple.JSONArray;
 import org.json.simple.JSONObject;
+import server.UpdatesWebSocketHandler;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -12,20 +13,30 @@ import static spark.Spark.*;
 
 public class RestApi {
 
-    private GameState.InitializerBuilder builder = new GameState.InitializerBuilder(2)
-            .boardX(640)
-            .boardY(480);
+    private GameState gameState;
+    UpdatesWebSocketHandler handler;
+
+    public RestApi(GameState gameState){
+        this.gameState = gameState;
+        handler = new UpdatesWebSocketHandler(gameState);
+    }
 
     public void loginUsersRequest() {
-
         Map<String, Integer> users = new HashMap<>();
+
+
+        webSocket("/game/websocket", handler);
+
+        staticFiles.location("/public");
 
         get("/login/:nick", (req, res)-> {
             String nick = req.params(":nick");
             return generateLoginRequest(users, nick).toJSONString();
         });
 
-        get("/init", (req, res) -> generateInitRequest(builder.build()).toJSONString());
+        get("/init", (req, res) -> generateInitRequest(this.gameState).toJSONString());
+
+        init();
     }
 
     private JSONObject generateInitRequest(GameState builder){
@@ -65,7 +76,7 @@ public class RestApi {
             json.put("token", 33);
             users.put(nick, 33);
 
-            builder.addPlayer(new Point(28,12), "Jasiek");
+            gameState.addPlayer(nick, new Point(28,12));
 
         }else {
             json.put("msg", "Nickname occupied");
