@@ -5,7 +5,6 @@ import service.UpdatePositionService;
 
 import java.util.List;
 import java.util.Map;
-
 import static org.junit.Assert.assertEquals;
 import static org.mockito.Mockito.mock;
 
@@ -35,7 +34,7 @@ public class GameStateTest {
         List<Motorcycle> motorcyclesUpdated = gameState1.getMotorcycles();
 
         for(Motorcycle moto : motorcyclesUpdated){
-            if(moto.getPlayerNick() == player)
+            if(moto.getPlayerNick().equals(player))
                 assertEquals(motorcycle.getDirection(), moto.getDirection());
             else assertEquals(Direction.RIGHT, moto.getDirection());
         }
@@ -62,7 +61,7 @@ public class GameStateTest {
 
         motorcycles = gameState1.getMotorcycles();
         for(Motorcycle moto : motorcycles){
-            if(moto.getPlayerNick() == "player")
+            if(moto.getPlayerNick().equals("player"))
                 assertEquals(false, moto.isAlive());
         }
     }
@@ -70,8 +69,6 @@ public class GameStateTest {
     @Test
     public void movePlayers(){
         String player = "player";
-        String player2 = "player2";
-
         GameState gameState = mock(GameState.class);
         Point point = mock(Point.class);
 
@@ -89,7 +86,7 @@ public class GameStateTest {
 
         motorcycles = gameState1.getMotorcycles();
         for(Motorcycle moto : motorcycles) {
-           if (moto.getPlayerNick() == player) {
+           if (moto.getPlayerNick().equals(player)) {
                int x = moto.getPosition().getX();
                int y = moto.getPosition().getY();
                service.update(moto, 1);
@@ -97,6 +94,5 @@ public class GameStateTest {
                assertEquals(y-1,moto.getPosition().getY());
             }
         }
-
     }
 }

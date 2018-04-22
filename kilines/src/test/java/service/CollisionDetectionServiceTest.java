@@ -51,7 +51,7 @@ public class CollisionDetectionServiceTest{
             int scoreInt;
             scoreInt = score.getScore();
             String nick = gameState.getMotorcycles().get(i).getPlayerNick();
-            if (nick == game.getBoard().get(moto)){
+            if (nick.equals(game.getBoard().get(moto))){
                 assertEquals(scoreInt + Award.COLLISION.getAward(),score);
             }
         }

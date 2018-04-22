@@ -27,6 +27,5 @@ public class UpdatePositionServiceTest {
 
         assertEquals(point.getX(),motorcycle.getPosition().getX());
         assertEquals(point.getY(),motorcycle.getPosition().getY());
-
     }
 }
