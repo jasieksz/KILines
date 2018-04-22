@@ -76,43 +76,40 @@ public class GameState {
     public void movePlayers() {
         motorcycles.stream()
                 .filter(Motorcycle::isAlive)
-                .forEach(motorcycle -> {
-                    for (int i = 0; i < motorcycle.getSpeed(); i++) {
-                        updatePositionService.update(motorcycle, 1);
-                        checkCollisions();
-                        updateBoard();
-                    }
-                });
-
+                .forEach(motorcycle -> updatePositionService.update(motorcycle, 1));
     }
 
 
     private void updateBoard(){
         motorcycles.stream()
                 .filter(Motorcycle::isAlive)
-                .forEach(motorcycle ->
-                        board.put(motorcycle.getPosition(), motorcycle.getPlayerNick()));
+                .forEach(motorcycle -> {
+                        //System.out.println(board.get(motorcycle.getPlayerNick()));
+                        board.put(motorcycle.getPosition(), motorcycle.getPlayerNick());
+                });
     }
 
     private void checkCollisions() {
         motorcycles.stream()
-                .filter(Motorcycle::isAlive)
                 .filter(motorcycle -> collisionDetectionService.detect(this, motorcycle))
-                .forEach(motorcycle -> motorcycle.setAlive(false));
-
-        motorcycles.stream()
-                .filter(Motorcycle::isAlive)
                 .forEach(motorcycle -> {
-                    collisionDetectionWithPowerService.detect(this, motorcycle);
-                    powerupService.checkIfPowerupIsActive(motorcycle.getActivePowerups());
+                    motorcycle.setAlive(false);
+                    System.out.println("COLISION " + motorcycle.getPlayerNick());
                 });
+
+//        motorcycles.stream()
+//                .filter(Motorcycle::isAlive)
+//                .forEach(motorcycle -> {
+//                    collisionDetectionWithPowerService.detect(this, motorcycle);
+//                    powerupService.checkIfPowerupIsActive(motorcycle.getActivePowerups());
+//                });
     }
 
-//    public void atomicMoveCollisionUpdate() {
-//        movePlayers();
-//        checkCollisions();
-//        updateBoard();
-//    }
+    public void atomicMoveCollisionUpdate() {
+        movePlayers();
+        checkCollisions();
+        updateBoard();
+    }
 
     public void changePlayerDirection(String playerId, Direction direction) {
         motorcycles.stream()
@@ -232,7 +229,7 @@ public class GameState {
         private void createWalls() {
             IntStream.range(0, x).forEach(i -> {
                 board.put(new Point(i, 0), GameUtils.WALL);
-                board.put(new Point(i, y - 1), GameUtils.WALL);
+                board.put(new Point(i, y-1), GameUtils.WALL);
             });
             IntStream.range(0, y).forEach(i -> {
                 board.put(new Point(0, i), GameUtils.WALL);

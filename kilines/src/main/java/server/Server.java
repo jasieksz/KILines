@@ -12,16 +12,20 @@ import java.util.concurrent.ThreadLocalRandom;
 import java.util.concurrent.TimeUnit;
 
 public class Server {
-    private GameState gameState = null;
-    private GameState.InitializerBuilder builder = new GameState.InitializerBuilder(1)
+
+    private GameState gameState;
+    private Serializer serializer;
+    private boolean isStarted;
+
+    public Server() {
+        gameState = new GameState.InitializerBuilder(1)
             .boardX(GameUtils.boardX)
             .boardY(GameUtils.boardY)
             .addWalls()
-            .addAGHWalls();
+            .build();
 
-    private boolean isStarted = false;
-
-    private Serializer serializer = new Serializer(getGameState());
+        serializer = new Serializer(getGameState());
+    }
 
     public void stop(){
         this.isStarted = false;
@@ -36,15 +40,12 @@ public class Server {
         Observable.interval(GameUtils.interval, TimeUnit.MILLISECONDS)
                 .filter((e) -> this.isStarted)
                 .subscribe(tick -> {
-                    gameState.movePlayers();
+                    gameState.atomicMoveCollisionUpdate();
                     api.getHandler().broadcast(serializer.serializeMotorcycles());
                 });
     }
 
     public GameState getGameState() {
-        if (gameState == null){
-            this.gameState = builder.build();
-        }
         return gameState;
     }
 }

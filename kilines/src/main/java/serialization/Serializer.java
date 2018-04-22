@@ -32,7 +32,6 @@ public class Serializer {
     }
 
     public String serializeBoard() {
-        //Type type = new TypeToken<Map<Point, PlayerIdentifier>>(){}.getType();
-        return gson.toJson(gameState.getBoard()); //, type);
+        return gson.toJson(gameState.getBoard());
     }
 }

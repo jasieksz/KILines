@@ -22,7 +22,7 @@ public class Point {
 
     @Override
     public int hashCode() {
-        return Objects.hash(x, y);
+        return 117 * y + x;
     }
 
     @Override
@@ -43,6 +43,6 @@ public class Point {
             return false;
 
         Point pointToCompare = (Point) obj;
-        return pointToCompare.x == this.x && pointToCompare.y == this.y;
+        return pointToCompare.x.equals(this.x) && pointToCompare.y.equals(this.y);
     }
 }
