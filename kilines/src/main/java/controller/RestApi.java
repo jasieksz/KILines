@@ -14,11 +14,15 @@ import static spark.Spark.*;
 public class RestApi {
 
     private GameState gameState;
-    UpdatesWebSocketHandler handler;
+    private UpdatesWebSocketHandler handler;
 
     public RestApi(GameState gameState){
         this.gameState = gameState;
         handler = new UpdatesWebSocketHandler(gameState);
+    }
+
+    public UpdatesWebSocketHandler getHandler() {
+        return handler;
     }
 
     public void loginUsersRequest() {

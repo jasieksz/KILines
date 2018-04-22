@@ -25,8 +25,8 @@ public class Server {
         Serializer ser = new Serializer(gameState);
         System.out.println(ser.serializeGameState());
 
-        new RestApi(gameState).loginUsersRequest();
-
+        RestApi api = new RestApi(gameState);
+        api.loginUsersRequest();
 
 
 //        Observable.interval(GameUtils.interval, TimeUnit.MICROSECONDS)
@@ -38,7 +38,7 @@ public class Server {
 //        while(true){
 //            gameState.movePlayers();
 //            gameState.checkCollisions();
-//            broadcast(Serialzier(gameState));
+//            api.getWebsocketHandler.broadcast(Serialzier(gameState));
 //        }
     }
 }
