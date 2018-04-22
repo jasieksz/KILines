@@ -1,27 +1,26 @@
 const w = 1280, h = 960;
-const backgroundColor = 23;
-const rectW = 4;
-const rectH = 4;
 const scale = 2;
+
+const backgroundColor = 23;
+const obstacleColour = [255, 255, 255];
+
 let playerColourCounter = 0;
 const playerColours = [
     [0, 167, 247],
     [244, 80, 66],
     [52, 237, 49],
-    [49, 218, 237]
+    [49, 218, 237],
 ];
-const obstacleColour = [255, 255, 255];
 
 let deathSound;
 
-let players;
-let communicator = new Communicator(location.href.replace('/game.html',''), handleUpdate);
+let players = [];
 let powerUps = [];
+let communicator = new Communicator(location.href.replace('/game.html',''), handleUpdate);
 
 function preload() {
     deathSound = loadSound('sound/explosion.mp3');
     communicator.openWebsocket();
-
 }
 
 function setup() {
@@ -37,8 +36,14 @@ function draw() {
 }
 
 function initState(state){
+    function renderObstacle(pos) {
+        noStroke();
+        fill(obstacleColour);
+        rect(pos.x * scale, pos.y * scale, scale, scale)
+    }
+
     state.obstacles.map((obs) => {
-        renderPoint(obs.pos);
+        renderObstacle(obs.pos);
     });
     players = initPlayers(state);
     loop();
@@ -46,7 +51,7 @@ function initState(state){
 
 function initPlayers(state) {
     return state.players.map( data =>{
-        return new Player(data, getColor());
+        return new Player(data, getColor(), scale);
     })
 }
 
@@ -69,12 +74,6 @@ function scoreboard() {
     }
 }
 
-function renderPoint(pos) {
-    noStroke();
-    fill(obstacleColour);
-    rect(pos.x * scale, pos.y * scale, rectW, rectH)
-}
-
 function keyPressed() {
     if (key === 'w' || key === 'W'){
         communicator.update("UP");
@@ -89,11 +88,9 @@ function keyPressed() {
 
 function handleUpdate(update){
     if (update.players) {
-        console.log(update.players);
         updatePlayers(update.players);
     }
-    else if(update.powerups) {
-        console.log(update.powerups);
+    if(update.powerups) {
         updatePowerUps(update.powerups);
     }
 }
@@ -122,9 +119,9 @@ function updatePowerUps(updates) {
         updates.map((up) => {
                 let selected = _.find(powerUps, (pu) => pu.x === up.position.x && pu.y === up.position.y);
                 if (selected) {
-                    selected.updated = true
+                    selected.updated = true;
                 } else {
-                    let power = new PowerUp(up);
+                    let power = new PowerUp(up, scale);
                     powerUps.push(power);
                     power.render();
                 }
@@ -135,7 +132,7 @@ function updatePowerUps(updates) {
         pu.hide();
         let indx = powerUps.indexOf(pu);
         powerUps.splice(indx, 1)
-    })
+    });
 }
 
 function kill(player) {
