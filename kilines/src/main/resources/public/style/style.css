@@ -29,3 +29,24 @@ body {
   top : 0;
   left : 0;
 }
+
+.scoreTable {
+  position: absolute;
+  width: 15%;
+  top : 25%;
+  left : 0;
+}
+
+.startButton{
+  position: absolute;
+  width: 10%;
+  left: 90%;
+  top: 0;
+}
+
+.resetButton{
+  position: absolute;
+  width: 10%;
+  left: 90%;
+  top: 5%;
+}

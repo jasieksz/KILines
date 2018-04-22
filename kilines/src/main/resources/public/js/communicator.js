@@ -12,6 +12,14 @@ class Communicator {
         });
     };
 
+    start (){
+        $.get(this.address + '/start');
+    }
+
+    restart (callback) {
+        $.get(this.address + '/reset', callback);
+    }
+
     receiveUpdates(e) {
         let msg = JSON.parse(e.data);
         this.updateCallback(msg)

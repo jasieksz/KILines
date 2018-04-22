@@ -3,20 +3,12 @@ const backgroundColor = 23;
 const rectW = 4;
 const rectH = 4;
 const scale = 2;
+let playerColourCounter = 0;
 const playerColours = [
     [0, 167, 247],
-    [0, 167, 247],
-    [0, 167, 247],
-    [0, 167, 247],
-    [0, 167, 247],
-    [0, 167, 247],
-    [0, 167, 247],
-    [0, 167, 247],
-    [0, 167, 247],
-    [0, 167, 247],
-    [0, 167, 247],
-    [0, 167, 247],
-    [0, 167, 247]
+    [244, 80, 66],
+    [52, 237, 49],
+    [49, 218, 237],
 ];
 const obstacleColour = [255, 255, 255];
 
@@ -32,6 +24,7 @@ function preload() {
 function setup() {
     createCanvas(w, h);
     background(backgroundColor);
+    noLoop();
     communicator.init(initState);
     communicator.openWebsocket();
 }
@@ -46,14 +39,12 @@ function initState(state){
         renderPoint(obs.pos);
     });
     players = initPlayers(state);
+    loop();
 }
 
 function initPlayers(state) {
-    let i = 0;
     return state.players.map( data =>{
-        let player = new Player(data, playerColours[i]);
-        i++;
-        return player;
+        return new Player(data, getColor());
     })
 }
 
@@ -65,18 +56,15 @@ function renderPlayers() {
 
 function scoreboard() {
     if(players && players.length > 0){
-        fill(255);
-        stroke(255);
-        textFont("Orbitron");
-        textSize(18);
-        text("Score", 1000, 25);
-        let i = 25;
         players.map((player) =>{
-            i += 25;
-            text(player.nick + " : " + player.score, 1000, i)
+            let scoreCounter = $('#' + player.nick);
+            if (scoreCounter.length){
+                scoreCounter.val(player.score);
+            } else {
+                $('#scoreboard').append('<tr><td>' + player.nick + '</td>' + '<td id=' + player.nick + '>' + player.score +'</td></tr>')
             }
-        );
-       }
+        });
+    }
 }
 
 function renderPoint(pos) {
@@ -87,16 +75,12 @@ function renderPoint(pos) {
 
 function keyPressed() {
     if (key === 'w' || key === 'W'){
-        console.log('w');
         communicator.update("UP");
     } else if (key === 'd' || key === 'D'){
-        console.log('d');
         communicator.update("RIGHT");
     } else if (key === 's' || key === 'S'){
-        console.log('s');
         communicator.update("DOWN");
     } else if (key === 'a' || key === 'A'){
-        console.log('a');
         communicator.update("LEFT");
     }
 }
@@ -121,13 +105,17 @@ class Player {
 }
 
 function handleUpdate(update){
-       console.log(update);
        update.map( (pl) => {
             let selectedPlayer = _.find(players, (pl2) => pl2.nick === pl.nick);
             if (selectedPlayer) {
                 selectedPlayer.x = pl.pos.x;
                 selectedPlayer.y = pl.pos.y;
                 if (selectedPlayer.isAlive !== pl.isAlive) kill(selectedPlayer);
+                selectedPlayer.isAlive = pl.isAlive;
+            } else {
+                players.push(
+                    new Player(pl, getColor())
+                );
             }
         }
     )
@@ -135,4 +123,21 @@ function handleUpdate(update){
 
 function kill(player) {
     deathSound.play();
+}
+
+function start() {
+    communicator.start();
+}
+
+function getColor(){
+    let colour = playerColours[playerColourCounter];
+    playerColourCounter++;
+    return colour;
+}
+
+function restart() {
+    function callback (){
+        location.reload();
+    }
+    communicator.restart(callback);
 }
