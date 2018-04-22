@@ -12,7 +12,7 @@ import java.util.concurrent.TimeUnit;
 
 public class Server {
     private GameState gameState = null;
-    private GameState.InitializerBuilder builder = new GameState.InitializerBuilder(4)
+    private GameState.InitializerBuilder builder = new GameState.InitializerBuilder(2)
             .boardX(GameUtils.boardX)
             .boardY(GameUtils.boardY)
             .addWalls();
@@ -25,20 +25,22 @@ public class Server {
 
 
     public void run(){
-        System.out.println(serializer.serializeMotorcycles());
+        //System.out.println(serializer.serializeMotorcycles());
 
         api = new RestApi(getGameState());
         api.loginUsersRequest();
-        api.getHandler().broadcast(serializer.serializeMotorcycles());
 
-//        Observable.interval(GameUtils.interval, TimeUnit.MICROSECONDS)
-//                .subscribe(tick -> {
-//                    gameState.atomicMoveAndCollision();
-//                    api.getHandler().broadcast(serializer.serializeBoard());
-//                });
+        Observable.interval(GameUtils.interval, TimeUnit.MICROSECONDS)
+                .subscribe(tick -> {
+                    gameState.atomicMoveAndCollision();
+                    api.getHandler().broadcast(serializer.serializeMotorcycles());
+                });
     }
 
     public GameState getGameState() {
-        return gameState != null ? gameState : builder.build();
+        if (gameState == null){
+            this.gameState = builder.build();
+        }
+        return gameState;
     }
 }

@@ -40,14 +40,15 @@ public class UpdatesWebSocketHandler {
     public void onMessage(Session user, String message) {
         String nick = getNick(user);
         System.out.println(message);
-        this.gameState.changePlayerDirection("Jasiek", Direction.valueOf(message)); // TODO change 12 for nick
+        this.gameState.changePlayerDirection(nick, Direction.valueOf(message)); // TODO change 12 for nick
     }
 
     private String getNick(Session user){
         return user.getUpgradeRequest()
                 .getCookies()
                 .stream()
-                .filter(c -> c.getName().equals("nick")).findFirst()
+                .filter(c -> c.getName().equals("nick"))
+                .findFirst()
                 .get()
                 .toString();
     }
