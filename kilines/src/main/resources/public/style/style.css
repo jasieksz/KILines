@@ -12,10 +12,16 @@ body {
   align-items: center; 
 }
 
-.inner{
+.nickButton{
   position:absolute;
   top: 60%;
   left: 40%;
+}
+
+.highscore{
+  position:absolute;
+  top: 65%;
+  left: 44%;
 }
 
 .KIimg{

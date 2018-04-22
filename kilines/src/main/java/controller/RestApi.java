@@ -5,7 +5,6 @@ import org.json.simple.JSONArray;
 import org.json.simple.JSONObject;
 import server.UpdatesWebSocketHandler;
 
-import java.util.HashMap;
 import java.util.Map;
 
 import static spark.Spark.*;
@@ -26,7 +25,6 @@ public class RestApi {
     }
 
     public void loginUsersRequest() {
-        Map<String, Integer> users = new HashMap<>();
 
         webSocket("/game/websocket", handler);
 
@@ -34,8 +32,9 @@ public class RestApi {
 
         get("/login/:nick", (req, res)-> {
             String nick = req.params(":nick");
-            return generateLoginRequest(users, nick).toJSONString();
+            return generateLoginRequest(nick).toJSONString();
         });
+
 
         get("/init", (req, res) -> generateInitRequest(this.gameState).toJSONString());
 
@@ -79,17 +78,15 @@ public class RestApi {
         return json;
     }
 
-    private JSONObject generateLoginRequest(Map<String, Integer> users, String nick){
+    private JSONObject generateLoginRequest(String nick){
         JSONObject json = new JSONObject();
 
         json.put("type", "login");
-        boolean isOk = !users.containsKey(nick);
+        boolean isOk = !gameState.getGameUserByNickname(nick).isPresent();
         json.put("isOk", isOk);
 
         if(isOk){
-            //todo: change token generation
             json.put("token", 33);
-            users.put(nick, 33);
 
             gameState.addPlayer(nick, new Point(28,12));
 

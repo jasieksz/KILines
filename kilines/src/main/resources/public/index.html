@@ -24,6 +24,9 @@
             loginReq(document.getElementById("nick").value, callback);
         }
 
+        function highscore() {
+            alert("NOT IMPLEMENTED:(")
+        }
     </script>
 </head>
 
@@ -33,10 +36,13 @@
         <source src="sound/motor_start.mp3" type="audio/mpeg">
     </audio>
     <img src="img/inf.jpg" class="img-rounded" alt="Cinque Terre">
-    <div id="nickInput" class="inner">
+    <div id="nickInput" class="nickButton">
         <label class="text-white" for="nick">Podaj nick</label>
         <input type="text" id="nick" name="nick" placeholder="nick">
         <button type="button" class="btn btn-success" onclick="login()">GRAJ</button>
+    </div>
+    <div id="high-score" class="highscore">
+        <button type="button" class="btn btn-info" onclick="highscore()">TABELA WYNIKÓW</button>
     </div>
     <div id="errors"></div>
 </div>
