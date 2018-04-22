@@ -11,7 +11,7 @@ public class UpdatePositionServiceTest {
 
     @Test
     public void updateTest(){
-        Motorcycle motorcycle = new Motorcycle(new PlayerIdentifier(Color.BLUE,5),new Point(10,10));
+        Motorcycle motorcycle = new Motorcycle("player",new Point(10,10));
         int delta = 5;
 
         int x = motorcycle.getPosition().getX();

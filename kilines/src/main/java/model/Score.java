@@ -12,7 +12,7 @@ public class Score {
         this.score += points;
     }
 
-    public int getScore(){
+    public int getScore() {
         return score;
     }
 }

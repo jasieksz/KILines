@@ -1,35 +1,37 @@
 package server;
 
-import model.Color;
+import controller.RestApi;
+import model.Direction;
 import model.GameState;
-import model.PlayerIdentifier;
 import model.Point;
 import rx.Observable;
 import serialization.Serializer;
 
+import java.util.concurrent.ThreadLocalRandom;
 import java.util.concurrent.TimeUnit;
 
 public class Server {
-    public static void main(String[] args) throws Exception {
+    private GameState gameState = null;
+    private GameState.InitializerBuilder builder = new GameState.InitializerBuilder(1)
+            .boardX(GameUtils.boardX)
+            .boardY(GameUtils.boardY)
+            .addWalls();
 
-        GameState gameState = new GameState.InitializerBuilder(2)
-                .boardX(640)
-                .boardY(480)
-                .addWalls()
-                .addAGHWalls()
-                .addPlayer(new Point(100, 100), new PlayerIdentifier(Color.RED, 1))
-                .addPlayer(new Point(400, 400), new PlayerIdentifier(Color.BLUE, 2))
-                .build();
+    private Serializer serializer = new Serializer(getGameState());
 
-        Serializer ser = new Serializer(gameState);
-        System.out.println(ser.serializeBoard());
+    public void run(RestApi api){
 
+        Observable.interval(GameUtils.interval, TimeUnit.MILLISECONDS)
+                .subscribe(tick -> {
+                    gameState.movePlayers();
+                    api.getHandler().broadcast(serializer.serializeMotorcycles());
+                });
+    }
 
-
-//        Observable.interval(GameUtils.interval, TimeUnit.MICROSECONDS)
-//                .toBlocking()
-//                .subscribe(tick -> {
-//                    gameState.movePlayers();
-//                });
+    public GameState getGameState() {
+        if (gameState == null){
+            this.gameState = builder.build();
+        }
+        return gameState;
     }
 }

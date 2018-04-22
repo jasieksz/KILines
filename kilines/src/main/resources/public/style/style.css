@@ -12,22 +12,41 @@ body {
   align-items: center; 
 }
 
-.holder{
-  position:relative;
-  width: 100%;
-  height: 100%;
-}
-.frame{
-  width: 100%;
-  height: 100%;
+.nickButton{
   position:absolute;
-  border: none;
-}
-.inner{
-  width: 100%;
-  height: 100%;
-  position:absolute;
-  margin: 0 auto;
+  top: 60%;
   left: 40%;
-  top: 50%;
+}
+
+.highscore{
+  position:absolute;
+  top: 65%;
+  left: 44%;
+}
+
+.KIimg{
+  position: absolute;
+  top : 0;
+  left : 0;
+}
+
+.scoreTable {
+  position: absolute;
+  width: 15%;
+  top : 25%;
+  left : 0;
+}
+
+.startButton{
+  position: absolute;
+  width: 10%;
+  left: 90%;
+  top: 0;
+}
+
+.resetButton{
+  position: absolute;
+  width: 10%;
+  left: 90%;
+  top: 5%;
 }

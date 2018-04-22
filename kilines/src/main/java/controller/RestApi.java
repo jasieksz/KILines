@@ -3,95 +3,115 @@ package controller;
 import model.*;
 import org.json.simple.JSONArray;
 import org.json.simple.JSONObject;
+import server.GameUtils;
+import server.Server;
+import server.UpdatesWebSocketHandler;
 
-import java.util.HashMap;
 import java.util.Map;
-import java.util.Random;
+import java.util.concurrent.ThreadLocalRandom;
 
 import static spark.Spark.*;
 
 
 public class RestApi {
 
-    private GameState.InitializerBuilder builder = new GameState.InitializerBuilder(2)
-            .boardX(640)
-            .boardY(480);
+    private GameState gameState;
+    private UpdatesWebSocketHandler handler;
 
-    Map<String, Integer> users = new HashMap<>();
+    public RestApi(GameState gameState){
+        this.gameState = gameState;
+        handler = new UpdatesWebSocketHandler(gameState);
+    }
 
-    public void loginUsersRequest() {
+    public UpdatesWebSocketHandler getHandler() {
+        return handler;
+    }
+
+    public void loginUsersRequest(Server server) {
+
+        webSocket("/game/websocket", handler);
+
+        staticFiles.location("/public");
 
         get("/login/:nick", (req, res)-> {
             String nick = req.params(":nick");
-            return generateLoginRequest(users, nick).toJSONString();
+            return generateLoginRequest(nick).toJSONString();
         });
 
-        get("/init", (req, res) -> generateInitRequest(builder.build()).toJSONString());
+
+        get("/init", (req, res) -> generateInitRequest(this.gameState).toJSONString());
+
+        RestApi thisApi = this;
+
+        get("/start", (req, res) -> {
+            server.run(thisApi);
+            return "204";
+        });
+
+        get("/reset", (req, res) -> {
+            server.getGameState().clearWalls();
+            server.getGameState().resurectPlayers();
+            return "204";
+        });
+
+        init();
     }
 
     private JSONObject generateInitRequest(GameState builder){
         JSONObject json = new JSONObject();
         json.put("type", "init");
 
-        JSONArray array = new JSONArray();
+        JSONArray arrayMotorcycle = new JSONArray();
 
         for (Motorcycle motorcycle: builder.getMotorcycles()){
             JSONObject item = new JSONObject();
 
-            item.put("nick", getNickname(motorcycle));
+            item.put("nick", motorcycle.getPlayerNick());
 
             JSONObject jsonPos = new JSONObject();
             jsonPos.put("x", motorcycle.getPosition().getX());
             jsonPos.put("y", motorcycle.getPosition().getY());
 
             item.put("pos", jsonPos);
-            array.add(item);
+            arrayMotorcycle.add(item);
         }
+        json.put("players", arrayMotorcycle);
 
-        json.put("players", array);
+
+        JSONArray arrayObstacles = new JSONArray();
+        for (Map.Entry<Point, String> entry : builder.getBoard().entrySet()) {
+            JSONObject item = new JSONObject();
+
+            JSONObject jsonPos = new JSONObject();
+            jsonPos.put("x", entry.getKey().getX());
+            jsonPos.put("y", entry.getKey().getY());
+            item.put("pos", jsonPos);
+
+            arrayObstacles.add(item);
+        }
+        json.put("obstacles", arrayObstacles);
+
         return json;
     }
 
-    private JSONObject generateLoginRequest(Map<String, Integer> users, String nick){
+    private JSONObject generateLoginRequest(String nick){
         JSONObject json = new JSONObject();
 
         json.put("type", "login");
-        boolean isOk = !users.containsKey(nick);
+        boolean isOk = !gameState.getGameUserByNickname(nick).isPresent();
         json.put("isOk", isOk);
 
         if(isOk){
-            int token = generateToken();
-            json.put("token",token);
-            users.put(nick,token);
+            json.put("token", 33);
+            int x = ThreadLocalRandom.current().nextInt(0, GameUtils.boardX);
+            int y = ThreadLocalRandom.current().nextInt(0, GameUtils.boardY);
 
-            builder.addPlayer(new Point(28,12), new PlayerIdentifier(Color.BLUE, token));
+            gameState.addPlayer(nick, new Point(x,y));
 
         }else {
             json.put("msg", "Nickname occupied");
         }
         return json;
-    }
-
-    private int generateToken(){
-        Random random = new Random();
-        int token;
-        do {
-            token = random.nextInt(100);
-        } while(users.containsValue(token));
-
-        return token;
-    }
-
-    private String getNickname(Motorcycle motorcycle) {
-        int playerId = motorcycle.getPlayerId().getPlayerId();
-        boolean hasId = users.containsValue(playerId);
-        String nickName = "";
-        for (Map.Entry<String, Integer> entry : users.entrySet()) {
-            if (entry.getValue().equals(playerId)) {
-                nickName = entry.getKey();
-            }
-        }
-        return nickName;
     }
 
 }

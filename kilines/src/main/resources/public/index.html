@@ -6,33 +6,43 @@
     <link rel="stylesheet" href="style/style.css">
 
   <script language="javascript" type="text/javascript" src="js/jquery-3.3.1.min.js"></script>
-  <script language="javascript" type="text/javascript" src="js/bootstrap.min.css"></script>
+  <script language="javascript" type="text/javascript" src="js/tether.min.js"></script>
+  <script language="javascript" type="text/javascript" src="js/bootstrap.min.js"></script>
     <script>
 
         const loginReq = function (name, callback) {
+            document.cookie = "nick=" + name;
             $.get(location.href + "/login/" + name, callback());
         };
-
         function login() {
             const callback = function () {
-                let iframe = $("#gameFrame");
-                let input = $("#nickInput");
-                iframe.attr("src", iframe.data("src"));
-                input.hide();
+                $('#start-sound')[0].play();
+                $("#start-sound").bind("ended", function(){
+                    location.href='/game.html'
+                });
             };
             loginReq(document.getElementById("nick").value, callback);
         }
 
+        function highscore() {
+            alert("NOT IMPLEMENTED:(")
+        }
     </script>
 </head>
 
 <body>
-<div class="holder">
-    <iframe class='frame' id='gameFrame' data-src='game.html' src='about:blank'></iframe>
-    <div id="nickInput" class="inner">
+<div>
+    <audio id="start-sound">
+        <source src="sound/motor_start.mp3" type="audio/mpeg">
+    </audio>
+    <img src="img/inf.jpg" class="img-rounded" alt="Cinque Terre">
+    <div id="nickInput" class="nickButton">
         <label class="text-white" for="nick">Podaj nick</label>
         <input type="text" id="nick" name="nick" placeholder="nick">
-        <button type="button" class="btn btn-success" onclick="login()"></button>
+        <button type="button" class="btn btn-success" onclick="login()">GRAJ</button>
+    </div>
+    <div id="high-score" class="highscore">
+        <button type="button" class="btn btn-info" onclick="highscore()">TABELA WYNIKÓW</button>
     </div>
     <div id="errors"></div>
 </div>

@@ -12,7 +12,7 @@ import java.util.HashMap;
 import java.util.Map;
 
 public class Serializer {
-    private final GameState gameState;
+    private GameState gameState;
     private final Gson gson = new GsonBuilder()
             .enableComplexMapKeySerialization()
             .setPrettyPrinting()
@@ -21,6 +21,10 @@ public class Serializer {
 
     public Serializer(GameState gameState) {
         this.gameState = gameState;
+    }
+
+    public String serializeGameState() {
+        return gson.toJson(gameState);
     }
 
     public String serializeMotorcycles(){

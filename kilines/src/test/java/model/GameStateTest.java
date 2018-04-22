@@ -17,22 +17,25 @@ public class GameStateTest {
         Point point = mock(Point.class);
         Point point1 = mock(Point.class);
 
-        Motorcycle motorcycle = new Motorcycle(new PlayerIdentifier(Color.BLUE, 2), point);
-        Motorcycle motorcycle1 = new Motorcycle(new PlayerIdentifier(Color.RED,3),point1);
+        String player = "player";
+        String player2 = "player2";
 
-        Map<Point,PlayerIdentifier> board = gameState.getBoard();
+        Motorcycle motorcycle = new Motorcycle(player, point);
+        Motorcycle motorcycle1 = new Motorcycle(player2,point1);
+
+        Map<Point,String> board = gameState.getBoard();
         List<Motorcycle> motorcycles = gameState.getMotorcycles();
         motorcycles.add(motorcycle);
         motorcycles.add(motorcycle1);
 
         GameState gameState1 = new GameState(board,motorcycles);
 
-        gameState1.changePlayerDirection(3,Direction.RIGHT);
+        gameState1.changePlayerDirection(player2,Direction.RIGHT);
 
         List<Motorcycle> motorcyclesUpdated = gameState1.getMotorcycles();
 
         for(Motorcycle moto : motorcyclesUpdated){
-            if(moto.getPlayerId().getPlayerId() == 2)
+            if(moto.getPlayerNick() == player)
                 assertEquals(motorcycle.getDirection(), moto.getDirection());
             else assertEquals(Direction.RIGHT, moto.getDirection());
         }
@@ -43,15 +46,15 @@ public class GameStateTest {
         GameState gameState = mock(GameState.class);
         Point point = mock(Point.class);
 
-        Motorcycle motorcycle = new Motorcycle(new PlayerIdentifier(Color.WHITE,2), point);
+        Motorcycle motorcycle = new Motorcycle("player", point);
         List<Motorcycle> motorcycles = gameState.getMotorcycles();
         motorcycles.add(motorcycle);
 
-        Map<Point,PlayerIdentifier> board = gameState.getBoard();
+        Map<Point,String> board = gameState.getBoard();
 
-        Motorcycle collidingMotorcycle = new Motorcycle(new PlayerIdentifier(Color.BLUE,3), point);
+        Motorcycle collidingMotorcycle = new Motorcycle("player1", point);
         motorcycles.add(collidingMotorcycle);
-        board.put(point,new PlayerIdentifier(Color.BLUE,3));
+        board.put(point,"player1");
 
         GameState gameState1 = new GameState(board,motorcycles);
 
@@ -59,24 +62,25 @@ public class GameStateTest {
 
         motorcycles = gameState1.getMotorcycles();
         for(Motorcycle moto : motorcycles){
-            if(moto.getPlayerId().getPlayerId() == 3)
+            if(moto.getPlayerNick() == "player")
                 assertEquals(false, moto.isAlive());
         }
     }
 
     @Test
     public void movePlayers(){
-        int PLAYER_ID = 2;
+        String player = "player";
+        String player2 = "player2";
 
         GameState gameState = mock(GameState.class);
         Point point = mock(Point.class);
 
-        Motorcycle motorcycle = new Motorcycle(new PlayerIdentifier(Color.WHITE,PLAYER_ID), point);
+        Motorcycle motorcycle = new Motorcycle(player, point);
         List<Motorcycle> motorcycles = gameState.getMotorcycles();
         motorcycles.add(motorcycle);
 
-        Map<Point,PlayerIdentifier> board = gameState.getBoard();
-        board.put(point,motorcycle.getPlayerId());
+        Map<Point,String> board = gameState.getBoard();
+        board.put(point,motorcycle.getPlayerNick());
 
         GameState gameState1 = new GameState(board,motorcycles);
 
@@ -85,7 +89,7 @@ public class GameStateTest {
 
         motorcycles = gameState1.getMotorcycles();
         for(Motorcycle moto : motorcycles) {
-           if (moto.getPlayerId().getPlayerId() == PLAYER_ID) {
+           if (moto.getPlayerNick() == player) {
                int x = moto.getPosition().getX();
                int y = moto.getPosition().getY();
                service.update(moto, 1);

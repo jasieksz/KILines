@@ -15,14 +15,14 @@ public class CollisionDetectionServiceTest{
     public void detectCollisionTest(){
         GameState gameState = mock(GameState.class);
         Point point = mock(Point.class);
-        PlayerIdentifier playerIdentifier = mock(PlayerIdentifier.class);
 
-        Map<Point, PlayerIdentifier> board = gameState.getBoard();
-        board.put(point,playerIdentifier);
+        String playerNick = "player";
+        Map<Point, String> board = gameState.getBoard();
+        board.put(point,playerNick);
 
         PlayerIdentifier id = new PlayerIdentifier(Color.RED,10);
 
-        Motorcycle moto = new Motorcycle(id, point);
+        Motorcycle moto = new Motorcycle(playerNick, point);
         List<Motorcycle> motorcycles = gameState.getMotorcycles();
         motorcycles.add(moto);
         GameState game = new GameState(board,motorcycles);
@@ -35,12 +35,12 @@ public class CollisionDetectionServiceTest{
     public void addsScoreTest(){
         GameState gameState = mock(GameState.class);
         Point point = mock(Point.class);
-        PlayerIdentifier playerIdentifier = mock(PlayerIdentifier.class);
+        String playerNick = "player";
 
-        Map<Point, PlayerIdentifier> board = gameState.getBoard();
-        board.put(point,playerIdentifier);
+        Map<Point, String> board = gameState.getBoard();
+        board.put(point,playerNick);
 
-        Motorcycle moto = new Motorcycle(playerIdentifier,point);
+        Motorcycle moto = new Motorcycle(playerNick,point);
         List<Motorcycle> motorcycles = gameState.getMotorcycles();
         GameState game = new GameState(board,motorcycles);
 
@@ -48,9 +48,10 @@ public class CollisionDetectionServiceTest{
 
         for (int i = 0; i < gameState.getMotorcycles().size(); i++){
             Score score = gameState.getMotorcycles().get(i).getScore();
-            int scoreInt = score.getScore();
-            int playerId = gameState.getMotorcycles().get(i).getPlayerId().getPlayerId();
-            if (playerId == game.getBoard().get(moto).getPlayerId()){
+            int scoreInt;
+            scoreInt = score.getScore();
+            String nick = gameState.getMotorcycles().get(i).getPlayerNick();
+            if (nick == game.getBoard().get(moto)){
                 assertEquals(scoreInt + Award.COLLISION.getAward(),score);
             }
         }

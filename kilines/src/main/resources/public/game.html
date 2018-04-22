@@ -3,8 +3,10 @@
   <meta charset="UTF-8">
   <title>KILines</title>
 
+  <link rel="stylesheet" href="style/bootstrap.min.css">
   <link rel="stylesheet" href="style/style.css">
   <script language="javascript" type="text/javascript" src="js/p5.js"></script>
+  <script language="javascript" type="text/javascript" src="js/p5.sound.js"></script>
   <script language="javascript" type="text/javascript" src="js/lodash.min.js"></script>
   <script language="javascript" type="text/javascript" src="js/jquery-3.3.1.min.js"></script>
   <script src="js/communicator.js"></script>
@@ -14,6 +16,15 @@
 </head>
 
 <body>
+  <img src="img/KIlogo.jpg" class="KIimg">
+  <table id="scoreboard" class="table table-dark scoreTable text-white">
+    <tr>
+      <th >user</th>
+      <th >score</th>
+    </tr>
+  </table>
+  <button class="startButton btn btn-success" onclick="start()">START</button>
+  <button class="resetButton btn btn-danger" onclick="restart()">RESTART</button>
 </body>
 
 </html>

@@ -1,36 +1,50 @@
 package model;
 
+import org.eclipse.jetty.websocket.api.Session;
+
+import model.powerups.Powerup;
+
+import java.util.ArrayList;
+import java.util.List;
+
 public class Motorcycle {
-    private final PlayerIdentifier playerId;
-    private Direction direction;
-    private Point position;
+    private final String nick;
+    private Direction dir;
+    private Point pos;
     private int speed;
     private boolean isAlive;
     private Score score;
+    private List<Powerup> activePowerups;
 
-    public Motorcycle(PlayerIdentifier playerId, Point position) {
-        this.playerId = playerId;
-        this.position = position;
-        this.direction = Direction.UP;
+    public Motorcycle(String playerId, Point position) {
+        this.nick = playerId;
+        this.pos = position;
+        this.dir = Direction.UP;
         this.speed = 1;
         this.isAlive = true;
         this.score = new Score();
+        this.activePowerups = new ArrayList<>();
+//        this.thickerSteps = 0;
+    }
+
+    public List<Powerup> getActivePowerups() {
+        return activePowerups;
     }
 
     public Point getPosition() {
-        return position;
+        return pos;
     }
 
     public void setPosition(Point position) {
-        this.position = position;
+        this.pos = position;
     }
 
     public Direction getDirection() {
-        return direction;
+        return dir;
     }
 
     public void setDirection(Direction direction) {
-        this.direction = direction;
+        this.dir = direction;
     }
 
     public void setAlive(boolean isAlive) {
@@ -45,8 +59,8 @@ public class Motorcycle {
         this.speed = speed;
     }
 
-    public PlayerIdentifier getPlayerId() {
-        return playerId;
+    public String getPlayerNick() {
+        return nick;
     }
 
     public boolean isAlive() {
@@ -55,5 +69,9 @@ public class Motorcycle {
 
     public Score getScore() {
         return score;
+    }
+
+    public void addActivePowerup(Powerup activePowerup) {
+        this.activePowerups.add(activePowerup);
     }
 }

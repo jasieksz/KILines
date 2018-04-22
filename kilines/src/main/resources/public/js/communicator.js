@@ -7,38 +7,31 @@ class Communicator {
 
     init (callback) {
         $.get(this.address + "/init", (data) => {
-            console.log(data);
             const state = JSON.parse(data);
             callback(state);
         });
     };
 
+    start (){
+        $.get(this.address + '/start');
+    }
+
+    restart (callback) {
+        $.get(this.address + '/reset', callback);
+    }
+
     receiveUpdates(e) {
-        let msg = JSON.parse(e);
-        if (msg.type === "update")
-            this.updateCallback(msg)
+        let msg = JSON.parse(e.data);
+        this.updateCallback(msg)
     }
 
     openWebsocket() {
-        console.log(this.addressWs)
-        this.socket = new WebSocket("ws://localhost:4567/game/websocket")
-        console.log(this.socket)
-        this.socket.onconnect = (e) => this.receiveUpdates(e)
-        this.socket.onopen = () => this.socket.send("ala ma psa")
+        this.socket = new WebSocket("ws://localhost:4567/game/websocket");
+        this.socket.onmessage = (e) => this.receiveUpdates(e);
     }
 
     update(direction) {
-        console.log("elo");
-        let update = this._buildDirectionUpdate(direction);
-        this.socket.send(JSON.stringify(update));
-    }
-
-    _buildUpdate(direction) {
-        return {
-            type: "update",
-            direction: direction,
-            token: this.token
-        }
+        this.socket.send(JSON.stringify(direction));
     }
 
 }

@@ -1,19 +1,30 @@
 const w = 1280, h = 960;
-const playerStartX = w / 2 - 80;
-const playerStartY = h / 2;
 const backgroundColor = 23;
 const rectW = 4;
 const rectH = 4;
+const scale = 2;
+let playerColourCounter = 0;
 const playerColours = [
-    [0, 167, 247]
+    [0, 167, 247],
+    [244, 80, 66],
+    [52, 237, 49],
+    [49, 218, 237],
 ];
+const obstacleColour = [255, 255, 255];
+
+let deathSound;
 
 let players;
 let communicator = new Communicator(location.href.replace('/game.html',''), handleUpdate);
 
+function preload() {
+    deathSound = loadSound('sound/explosion.mp3');
+}
+
 function setup() {
     createCanvas(w, h);
     background(backgroundColor);
+    noLoop();
     communicator.init(initState);
     communicator.openWebsocket();
 }
@@ -24,19 +35,16 @@ function draw() {
 }
 
 function initState(state){
-    console.log(state);
     state.obstacles.map((obs) => {
-        renderPoint(obs.pos, state.colors[obs.color]);
+        renderPoint(obs.pos);
     });
     players = initPlayers(state);
+    loop();
 }
 
 function initPlayers(state) {
-    let i = 0;
     return state.players.map( data =>{
-        let player = new Player(data, playerColours[i]);
-        i++;
-        return player;
+        return new Player(data, getColor());
     })
 }
 
@@ -48,38 +56,32 @@ function renderPlayers() {
 
 function scoreboard() {
     if(players && players.length > 0){
-        fill(0);
-        textFont("Orbitron");
-        textSize(18);
-        text("Score");
-        let i = 0;
         players.map((player) =>{
-            i += 25;
-            text(player.nick + " : " + player.score, 1000, 25)
+            let scoreCounter = $('#' + player.nick);
+            if (scoreCounter.length){
+                scoreCounter.val(player.score);
+            } else {
+                $('#scoreboard').append('<tr><td>' + player.nick + '</td>' + '<td id=' + player.nick + '>' + player.score +'</td></tr>')
             }
-        );
-       }
+        });
+    }
 }
 
-function renderPoint(pos, color) {
+function renderPoint(pos) {
     noStroke();
-    fill(color);
-    rect(pos.x, pos.y, rectW, rectH)
+    fill(obstacleColour);
+    rect(pos.x * scale, pos.y * scale, rectW, rectH)
 }
 
 function keyPressed() {
     if (key === 'w' || key === 'W'){
-        console.log('w');
-        communicator.update(0);
+        communicator.update("UP");
     } else if (key === 'd' || key === 'D'){
-        console.log('d');
-        communicator.update(1);
+        communicator.update("RIGHT");
     } else if (key === 's' || key === 'S'){
-        console.log('s');
-        communicator.update(2);
+        communicator.update("DOWN");
     } else if (key === 'a' || key === 'A'){
-        console.log('a');
-        communicator.update(3);
+        communicator.update("LEFT");
     }
 }
 
@@ -91,67 +93,51 @@ class Player {
         this.y = data.pos.y;
         this.nick = data.nick;
         this.score = 0;
+        this.isAlive = true;
     }
 
     render () {
         stroke(this.color);
-        rect(this.x, this.y, rectW, rectH);
+        fill(this.color);
+        rect(this.x * scale, this.y * scale, rectW, rectH);
     }
 
 }
 
 function handleUpdate(update){
-    update.players.map( (pl) => {
+       update.map( (pl) => {
             let selectedPlayer = _.find(players, (pl2) => pl2.nick === pl.nick);
             if (selectedPlayer) {
                 selectedPlayer.x = pl.pos.x;
                 selectedPlayer.y = pl.pos.y;
+                if (selectedPlayer.isAlive !== pl.isAlive) kill(selectedPlayer);
+                selectedPlayer.isAlive = pl.isAlive;
+            } else {
+                players.push(
+                    new Player(pl, getColor())
+                );
             }
         }
     )
 }
 
-let c = 0;
-
-function getState() {
-    return {
-        'type' : 'init',
-        'players': [
-            {
-                'nick': 'Andrzej',
-                'pos': {x: playerStartX, y: playerStartY},
-                'dir': 0
-            }
-        ],
-        'colors': [[244, 66, 66],[143, 244, 65]],
-        'obstacles' :[
-            {'pos': {'x': 0,'y': 0}, 'color': 0},
-            {'pos': {'x': 0,'y': 1}, 'color': 0},
-            {'pos': {'x': 0,'y': 2}, 'color': 0},
-            {'pos': {'x': 0,'y': 3}, 'color': 0},
-            {'pos': {'x': 0,'y': 4}, 'color': 0},
-            {'pos': {'x': 0,'y': 5}, 'color': 0},
-            {'pos': {'x': 0,'y': 6}, 'color': 0},
-            {'pos': {'x': 0,'y': 7}, 'color': 0},
-            {'pos': {'x': 0,'y': 8}, 'color': 0},
-            {'pos': {'x': 0,'y': 9}, 'color': 0},
-            {'pos': {'x': 0,'y': 10}, 'color': 0},
-            {'pos': {'x': 0,'y': 11}, 'color': 0},
-            {'pos': {'x': 0,'y': 12}, 'color': 0},
-            {'pos': {'x': 0,'y': 13}, 'color': 0},
-            {'pos': {'x': 0,'y': 14}, 'color': 0},
-            {'pos': {'x': 0,'y': 15}, 'color': 0},
-            {'pos': {'x': 0,'y': 16}, 'color': 0},
-            {'pos': {'x': 0,'y': 17}, 'color': 0},
-            {'pos': {'x': 300,'y': 300}, 'color': 1},
-            {'pos': {'x': 301,'y': 300}, 'color': 1},
-            {'pos': {'x': 302,'y': 300}, 'color': 1},
-            {'pos': {'x': 303,'y': 300}, 'color': 1},
-            {'pos': {'x': 304,'y': 300}, 'color': 1},
-            {'pos': {'x': 305,'y': 300}, 'color': 1},
-            {'pos': {'x': 306,'y': 300}, 'color': 1},
-            {'pos': {'x': 307,'y': 300}, 'color': 1}
-        ]
-    }
+function kill(player) {
+    deathSound.play();
 }
 
+function start() {
+    communicator.start();
+}
+
+function getColor(){
+    let colour = playerColours[playerColourCounter];
+    playerColourCounter++;
+    return colour;
+}
+
+function restart() {
+    function callback (){
+        location.reload();
+    }
+    communicator.restart(callback);
+}

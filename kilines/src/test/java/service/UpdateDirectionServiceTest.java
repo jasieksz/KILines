@@ -11,7 +11,7 @@ public class UpdateDirectionServiceTest {
     @Test
     public void updateDirectionTest(){
         Point point = mock(Point.class);
-        Motorcycle motorcycle = new Motorcycle(new PlayerIdentifier(Color.RED,5), point);
+        Motorcycle motorcycle = new Motorcycle("player", point);
 
         Direction direction = Direction.RIGHT;
         int dir = direction.getDir();
