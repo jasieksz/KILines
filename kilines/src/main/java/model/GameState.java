@@ -1,5 +1,6 @@
 package model;
 
+import server.GameUtils;
 import service.CollisionDetectionService;
 import service.UpdateDirectionService;
 import service.UpdatePositionService;
@@ -11,10 +12,11 @@ import java.util.Map;
 import java.util.stream.IntStream;
 
 public class GameState {
-    private Map<Point, PlayerIdentifier> board;
+    private Map<Point, String> board;
     private List<Motorcycle> motorcycles;
 
-    public GameState(Map<Point, PlayerIdentifier> board, List<Motorcycle> motorcycles) {
+
+    public GameState(Map<Point, String> board, List<Motorcycle> motorcycles) {
         this.board = board;
         this.motorcycles = motorcycles;
     }
@@ -23,7 +25,7 @@ public class GameState {
     private CollisionDetectionService collisionDetectionService = new CollisionDetectionService();
     private UpdateDirectionService updateDirectionService = new UpdateDirectionService();
 
-    public Map<Point, PlayerIdentifier> getBoard() {
+    public Map<Point, String> getBoard() {
         return board;
     }
 
@@ -31,7 +33,7 @@ public class GameState {
         return motorcycles;
     }
 
-    public void addPlayer(PlayerIdentifier id, Point pos){
+    public void addPlayer(String id, Point pos){
         motorcycles.add(new Motorcycle(id, pos));
         return;
     }
@@ -58,10 +60,10 @@ public class GameState {
                 .forEach(motorcycle -> motorcycle.setAlive(false));
     }
 
-    public void changePlayerDirection(int playerId, Direction direction) {
+    public void changePlayerDirection(String playerId, Direction direction) {
         motorcycles.stream()
                 .filter(Motorcycle::isAlive)
-                .filter(motorcycle -> motorcycle.getPlayerId().getPlayerId() == playerId)
+                .filter(motorcycle -> motorcycle.getPlayerId().equals(playerId))
                 .forEach(motorcycle -> updateDirectionService.updateDirection(motorcycle, direction));
     }
 
@@ -73,8 +75,8 @@ public class GameState {
         private int x;
         private int y;
 
-        private final PlayerIdentifier wall = new PlayerIdentifier(Color.WHITE, 0);
-        private Map<Point, PlayerIdentifier> board = new HashMap<>();
+
+        private Map<Point, String> board = new HashMap<>();
         private List<Motorcycle> motorcycleList = new ArrayList<>();
 
         public InitializerBuilder(int mp) {
@@ -91,7 +93,7 @@ public class GameState {
             return this;
         }
 
-        public InitializerBuilder addPlayer(Point initialPosition, PlayerIdentifier id) {
+        public InitializerBuilder addPlayer(Point initialPosition, String id) {
             motorcycleList.add(new Motorcycle(id, initialPosition));
             return this;
         }
@@ -108,24 +110,24 @@ public class GameState {
 
         public GameState build() {
             while (motorcycleList.size() < minPlayers){
-                addBot(new Point(0,0), wall); // TODO: Prepare for robot uprising
+                addBot(new Point(0,0), GameUtils.WALL); // TODO: Prepare for robot uprising
             }
             return new GameState(this.board, this.motorcycleList);
         }
 
 
-        private void addBot(Point initialPosition, PlayerIdentifier id) {
+        private void addBot(Point initialPosition, String id) {
             motorcycleList.add(new Motorcycle(id, initialPosition));
         }
 
         private void createWalls() {
             IntStream.range(0, x).forEach(i -> {
-                board.put(new Point(i, 0), wall);
-                board.put(new Point(i, y - 1), wall);
+                board.put(new Point(i, 0), GameUtils.WALL);
+                board.put(new Point(i, y - 1), GameUtils.WALL);
             });
             IntStream.range(0, y).forEach(i -> {
-                board.put(new Point(0, i), wall);
-                board.put(new Point(x - 1, i), wall);
+                board.put(new Point(0, i), GameUtils.WALL);
+                board.put(new Point(x - 1, i), GameUtils.WALL);
             });
         }
 

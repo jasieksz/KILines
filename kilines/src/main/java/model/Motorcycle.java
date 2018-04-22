@@ -1,36 +1,36 @@
 package model;
 
 public class Motorcycle {
-    private final PlayerIdentifier playerId;
-    private Direction direction;
-    private Point position;
+    private final String nick;
+    private Direction dir;
+    private Point pos;
     private int speed;
     private boolean isAlive;
     private Score score;
 
-    public Motorcycle(PlayerIdentifier playerId, Point position) {
-        this.playerId = playerId;
-        this.position = position;
-        this.direction = Direction.UP;
+    public Motorcycle(String playerId, Point position) {
+        this.nick = playerId;
+        this.pos = position;
+        this.dir = Direction.UP;
         this.speed = 1;
         this.isAlive = true;
         this.score = new Score();
     }
 
     public Point getPosition() {
-        return position;
+        return pos;
     }
 
     public void setPosition(Point position) {
-        this.position = position;
+        this.pos = position;
     }
 
     public Direction getDirection() {
-        return direction;
+        return dir;
     }
 
     public void setDirection(Direction direction) {
-        this.direction = direction;
+        this.dir = direction;
     }
 
     public void setAlive(boolean isAlive) {
@@ -45,8 +45,8 @@ public class Motorcycle {
         this.speed = speed;
     }
 
-    public PlayerIdentifier getPlayerId() {
-        return playerId;
+    public String getPlayerId() {
+        return nick;
     }
 
     public boolean isAlive() {
@@ -56,4 +56,5 @@ public class Motorcycle {
     public Score getScore() {
         return score;
     }
+
 }

@@ -13,16 +13,16 @@ public class Server {
     public static void main(String[] args) throws Exception {
 
         GameState gameState = new GameState.InitializerBuilder(2)
-                .boardX(640)
-                .boardY(480)
+                .boardX(GameUtils.boardX)
+                .boardY(GameUtils.boardY)
                 .addWalls()
                 .addAGHWalls()
-                .addPlayer(new Point(100, 100), new PlayerIdentifier(Color.RED, 1))
-                .addPlayer(new Point(400, 400), new PlayerIdentifier(Color.BLUE, 2))
+                .addPlayer(new Point(100, 100), "Jasiek")
+                .addPlayer(new Point(400, 400), "Stasiek")
                 .build();
 
         Serializer ser = new Serializer(gameState);
-        System.out.println(ser.serializeBoard());
+        System.out.println(ser.serializeGameState());
 
 
 
