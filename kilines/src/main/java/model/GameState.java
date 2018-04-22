@@ -117,8 +117,12 @@ public class GameState {
             return this;
         }
 
-        public InitializerBuilder addAGHWalls() throws IOException {
-            createAGHThemeWalls();
+        public InitializerBuilder addAGHWalls() {
+            try {
+                createAGHThemeWalls();
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
             return this;
         }
 
