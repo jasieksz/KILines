@@ -44,14 +44,28 @@ public class RestApi {
         RestApi thisApi = this;
 
         get("/start", (req, res) -> {
-            server.run(thisApi);
+            System.out.println("Starting...");
+            server.start();
+            //server.run(thisApi);
             return "204";
         });
 
         get("/reset", (req, res) -> {
+            System.out.println("Reseting...");
+            server.stop();
             server.getGameState().clearWalls();
             server.getGameState().resurectPlayers();
             return "204";
+        });
+
+        get("/do_stop", (req, res) -> {
+            server.stop();
+            return "stopped";
+        });
+
+        get("/do_start", (req, res) -> {
+            server.start();
+            return "started";
         });
 
         init();

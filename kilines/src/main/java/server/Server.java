@@ -5,6 +5,7 @@ import model.Direction;
 import model.GameState;
 import model.Point;
 import rx.Observable;
+import rx.Subscription;
 import serialization.Serializer;
 
 import java.util.concurrent.ThreadLocalRandom;
@@ -17,11 +18,22 @@ public class Server {
             .boardY(GameUtils.boardY)
             .addWalls();
 
+    private boolean isStarted = false;
+
     private Serializer serializer = new Serializer(getGameState());
+
+    public void stop(){
+        this.isStarted = false;
+    }
+
+    public void start(){
+        this.isStarted = true;
+    }
 
     public void run(RestApi api){
 
         Observable.interval(GameUtils.interval, TimeUnit.MILLISECONDS)
+                .filter((e) -> this.isStarted)
                 .subscribe(tick -> {
                     gameState.movePlayers();
                     api.getHandler().broadcast(serializer.serializeMotorcycles());

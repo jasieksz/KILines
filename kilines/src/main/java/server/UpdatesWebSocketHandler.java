@@ -40,7 +40,6 @@ public class UpdatesWebSocketHandler {
             gameState.getGameUserByNickname(nick).ifPresent(e -> e.setAlive(false));
 
             System.out.println("Deleting " + user + "for reason: " + reason + "(" + statusCode + ")");
-            System.out.println("seesion map: " + sessions.entrySet());
         }catch(Exception e){
             e.printStackTrace();
         }
@@ -51,7 +50,6 @@ public class UpdatesWebSocketHandler {
         try {
             String nick = getNick(user);
             System.out.println(nick);
-            System.out.println("got message: " + message);
             String newMsg = message.replace("\"", "");
             this.gameState.changePlayerDirection(nick, Direction.valueOf(newMsg));
         }catch (Exception e) {
@@ -76,7 +74,8 @@ public class UpdatesWebSocketHandler {
             try {
                 session.getRemote().sendString(message);
             } catch (Exception e) {
-                e.printStackTrace();
+                System.out.println(".");
+                //e.printStackTrace();
             }
         });
     }

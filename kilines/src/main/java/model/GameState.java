@@ -34,16 +34,20 @@ public class GameState {
 
     public GameState(Map<Point, String> board, List<Motorcycle> motorcycles) {
         this.board = board;
-        this.initialBoard = board;
+        this.initialBoard = new HashMap<>(board);
         this.motorcycles = motorcycles;
     }
 
     public void clearWalls(){
+        System.out.println(this.board.size());
         this.board = new HashMap<>(this.initialBoard);
+        System.out.println("clearing walls: ");
+        System.out.println(this.board.size());
     }
 
     public void resurectPlayers(){
         this.motorcycles.forEach(e -> e.setAlive(true));
+        System.out.println("resurecting players: ");
     }
 
     private UpdatePositionService updatePositionService = new UpdatePositionService();

@@ -8,5 +8,6 @@ public class Main {
 
         RestApi api = new RestApi(server.getGameState());
         api.loginUsersRequest(server);
+        server.run(api);
     }
 }
