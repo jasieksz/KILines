@@ -8,7 +8,7 @@ const playerColours = [
     [0, 167, 247],
     [244, 80, 66],
     [52, 237, 49],
-    [49, 218, 237],
+    [49, 218, 237]
 ];
 const obstacleColour = [255, 255, 255];
 
@@ -148,12 +148,14 @@ function start() {
 
 function getColor(){
     let colour = playerColours[playerColourCounter];
-    playerColourCounter = playerColourCounter + 1 % 4 ;
+    playerColourCounter = (playerColourCounter + 1) % 4 ;
     return colour;
 }
 
 function restart() {
     function callback (){
+        players = [];
+        powerUps = [];
         clear();
         setup();
     }
