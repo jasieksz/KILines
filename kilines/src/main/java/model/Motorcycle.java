@@ -2,6 +2,11 @@ package model;
 
 import org.eclipse.jetty.websocket.api.Session;
 
+import model.powerups.Powerup;
+
+import java.util.ArrayList;
+import java.util.List;
+
 public class Motorcycle {
     private final String nick;
     private Direction dir;
@@ -9,6 +14,7 @@ public class Motorcycle {
     private int speed;
     private boolean isAlive;
     private Score score;
+    private List<Powerup> activePowerups;
 
     public Motorcycle(String playerId, Point position) {
         this.nick = playerId;
@@ -17,6 +23,12 @@ public class Motorcycle {
         this.speed = 1;
         this.isAlive = true;
         this.score = new Score();
+        this.activePowerups = new ArrayList<>();
+//        this.thickerSteps = 0;
+    }
+
+    public List<Powerup> getActivePowerups() {
+        return activePowerups;
     }
 
     public Point getPosition() {
@@ -59,4 +71,7 @@ public class Motorcycle {
         return score;
     }
 
+    public void addActivePowerup(Powerup activePowerup) {
+        this.activePowerups.add(activePowerup);
+    }
 }
