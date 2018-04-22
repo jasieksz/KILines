@@ -65,7 +65,7 @@ public class RestApi {
             json.put("token", 33);
             users.put(nick, 33);
 
-            builder.addPlayer(new Point(28,12), new PlayerIdentifier(Color.BLUE, 33));
+            builder.addPlayer(new Point(28,12), "Jasiek");
 
         }else {
             json.put("msg", "Nickname occupied");
