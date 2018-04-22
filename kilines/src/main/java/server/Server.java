@@ -31,5 +31,11 @@ public class Server {
 //                .subscribe(tick -> {
 //                    gameState.movePlayers();
 //                });
+
+//        while(true){
+//            gameState.movePlayers();
+//            gameState.checkCollisions();
+//            broadcast(Serialzier(gameState));
+//        }
     }
 }

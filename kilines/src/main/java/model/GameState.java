@@ -31,6 +31,11 @@ public class GameState {
         return motorcycles;
     }
 
+    public void addPlayer(PlayerIdentifier id, Point pos){
+        motorcycles.add(new Motorcycle(id, pos));
+        return;
+    }
+
     public void movePlayers() {
         motorcycles.stream()
                 .filter(Motorcycle::isAlive)

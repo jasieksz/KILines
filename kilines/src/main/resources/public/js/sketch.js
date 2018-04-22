@@ -15,6 +15,7 @@ function setup() {
     createCanvas(w, h);
     background(backgroundColor);
     communicator.init(initState);
+    communicator.openWebsocket();
 }
 
 function draw() {
