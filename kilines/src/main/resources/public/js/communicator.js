@@ -20,25 +20,14 @@ class Communicator {
     }
 
     openWebsocket() {
-        console.log(this.addressWs)
-        this.socket = new WebSocket("ws://localhost:4567/game/websocket")
-        console.log(this.socket)
-        this.socket.onconnect = (e) => this.receiveUpdates(e)
-        this.socket.onopen = () => this.socket.send("UP")
+        console.log(this.addressWs);
+        this.socket = new WebSocket("ws://localhost:4567/game/websocket");
+        console.log(this.socket);
+        this.socket.onconnect = (e) => this.receiveUpdates(e);
     }
 
     update(direction) {
-        console.log("elo");
-        let update = this._buildDirectionUpdate(direction);
-        this.socket.send(JSON.stringify(update));
-    }
-
-    _buildUpdate(direction) {
-        return {
-            type: "update",
-            direction: direction,
-            token: this.token
-        }
+        this.socket.send(JSON.stringify(direction));
     }
 
 }
