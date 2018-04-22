@@ -27,13 +27,12 @@ import java.util.stream.IntStream;
 public class GameState {
     private Map<Point, String> board;
     private List<Motorcycle> motorcycles;
-    private List<Powerup> powerups;
+    private List<Powerup> powerups = new ArrayList<>();
 
 
     public GameState(Map<Point, String> board, List<Motorcycle> motorcycles) {
         this.board = board;
-        this.motorcycles = motorcycles;
-        this.powerups = powerups;
+        this.motorcycles = motorcycles;;
     }
 
     private UpdatePositionService updatePositionService = new UpdatePositionService();
@@ -65,11 +64,48 @@ public class GameState {
                 .forEach(motorcycle -> {
                     for (int i = 0; i < motorcycle.getSpeed(); i++) {
                         updatePositionService.update(motorcycle, 1);
+                        checkCollisions();
+                        updateBoard();
                     }
                 });
 
     }
 
+
+    private void updateBoard(){
+        motorcycles.stream()
+                .filter(Motorcycle::isAlive)
+                .forEach(motorcycle ->
+                        board.put(motorcycle.getPosition(), motorcycle.getPlayerNick()));
+    }
+
+    private void checkCollisions() {
+        motorcycles.stream()
+                .filter(Motorcycle::isAlive)
+                .filter(motorcycle -> collisionDetectionService.detect(this, motorcycle))
+                .forEach(motorcycle -> motorcycle.setAlive(false));
+
+        motorcycles.stream()
+                .filter(Motorcycle::isAlive)
+                .forEach(motorcycle -> {
+                    collisionDetectionWithPowerService.detect(this, motorcycle);
+                    powerupService.checkIfPowerupIsActive(motorcycle.getActivePowerups());
+                });
+    }
+
+//    public void atomicMoveCollisionUpdate() {
+//        movePlayers();
+//        checkCollisions();
+//        updateBoard();
+//    }
+
+    public void changePlayerDirection(String playerId, Direction direction) {
+        motorcycles.stream()
+                .filter(Motorcycle::isAlive)
+                .filter(motorcycle -> motorcycle.getPlayerNick().equals(playerId))
+                .forEach(motorcycle -> updateDirectionService.updateDirection(motorcycle, direction));
+    }
+// TODO
     public void generatePowerup() {
         Random generator = new Random();
         while (true) {
@@ -114,46 +150,6 @@ public class GameState {
             }
         }
 
-    }
-
-    private void updateBoard(){
-        motorcycles.stream()
-                .filter(Motorcycle::isAlive)
-                .forEach(motorcycle ->
-                        board.put(motorcycle.getPosition(), motorcycle.getPlayerNick()));
-    }
-
-    private void checkCollisions() {
-        motorcycles.stream()
-                .filter(Motorcycle::isAlive)
-                .filter(motorcycle -> collisionDetectionService.detect(this, motorcycle))
-                .forEach(motorcycle -> motorcycle.setAlive(false));
-
-        motorcycles.stream()
-                .filter(Motorcycle::isAlive)
-                .forEach(motorcycle -> {
-                    collisionDetectionWithPowerService.detect(this, motorcycle);
-                    powerupService.checkIfPowerupIsActive(motorcycle.getActivePowerups());
-                });
-    }
-
-    public void checkCollisionsWithPowerup() {
-        motorcycles.stream()
-                .filter(Motorcycle::isAlive)
-                .forEach(motorcycle -> collisionDetectionWithPowerService.detect(this, motorcycle));
-    }
-
-    public void changePlayerDirection(String playerId, Direction direction) {
-        motorcycles.stream()
-                .filter(Motorcycle::isAlive)
-                .filter(motorcycle -> motorcycle.getPlayerNick().equals(playerId))
-                .forEach(motorcycle -> updateDirectionService.updateDirection(motorcycle, direction));
-    }
-
-    public void atomicMoveCollisionUpdate() {
-        movePlayers();
-        checkCollisions();
-        updateBoard();
     }
 
     public Optional<Motorcycle> getGameUserByNickname(String nick){

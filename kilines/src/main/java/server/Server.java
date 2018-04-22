@@ -15,7 +15,6 @@ public class Server {
     private GameState.InitializerBuilder builder = new GameState.InitializerBuilder(1)
             .boardX(GameUtils.boardX)
             .boardY(GameUtils.boardY)
-            .addPlayer(new Point(10, 10), "Jasiek")
             .addWalls();
 
     private Serializer serializer = new Serializer(getGameState());
@@ -27,7 +26,7 @@ public class Server {
 
         Observable.interval(GameUtils.interval, TimeUnit.MILLISECONDS)
                 .subscribe(tick -> {
-                    gameState.atomicMoveCollisionUpdate();
+                    gameState.movePlayers();
                     api.getHandler().broadcast(serializer.serializeMotorcycles());
                 });
     }
