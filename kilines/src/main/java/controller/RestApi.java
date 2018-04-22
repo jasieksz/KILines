@@ -47,9 +47,8 @@ public class RestApi {
         JSONObject json = new JSONObject();
         json.put("type", "init");
 
-        JSONArray array = new JSONArray();
+        JSONArray arrayMotorcycle = new JSONArray();
 
-        //
         for (Motorcycle motorcycle: builder.getMotorcycles()){
             JSONObject item = new JSONObject();
 
@@ -61,10 +60,24 @@ public class RestApi {
             jsonPos.put("y", motorcycle.getPosition().getY());
 
             item.put("pos", jsonPos);
-            array.add(item);
+            arrayMotorcycle.add(item);
         }
+        json.put("players", arrayMotorcycle);
 
-        json.put("players", array);
+
+        JSONArray arrayObstacles = new JSONArray();
+        for (Map.Entry<Point, String> entry : builder.getBoard().entrySet()) {
+            JSONObject item = new JSONObject();
+
+            JSONObject jsonPos = new JSONObject();
+            jsonPos.put("x", entry.getKey().getX());
+            jsonPos.put("y", entry.getKey().getY());
+            item.put("pos", jsonPos);
+
+            arrayObstacles.add(item);
+        }
+        json.put("obstacles", arrayObstacles);
+
         return json;
     }
 
