@@ -50,6 +50,7 @@ public class RestApi {
 
         get("/reset", (req, res) -> {
             server.getGameState().clearWalls();
+            server.getGameState().resurectPlayers();
             return "204";
         });
 

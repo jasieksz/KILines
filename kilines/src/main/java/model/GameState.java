@@ -42,6 +42,10 @@ public class GameState {
         this.board = new HashMap<>(this.initialBoard);
     }
 
+    public void resurectPlayers(){
+        this.motorcycles.forEach(e -> e.setAlive(true));
+    }
+
     private UpdatePositionService updatePositionService = new UpdatePositionService();
     private CollisionDetectionService collisionDetectionService = new CollisionDetectionService();
     private CollisionDetectionWithPowerupService collisionDetectionWithPowerService = new CollisionDetectionWithPowerupService();
