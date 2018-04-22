@@ -16,17 +16,19 @@ public class Server {
             .boardX(GameUtils.boardX)
             .boardY(GameUtils.boardY)
             .addWalls();
+    private Serializer serializer = new Serializer(getGameState());
 
 
 
     public void run(){
-        RestApi api = new RestApi(gameState);
-        api.loginUsersRequest();
+//        RestApi api = new RestApi(gameState);
+//        api.loginUsersRequest();
+        System.out.println(serializer.serializeMotorcycles());
 
-        Observable.interval(GameUtils.interval, TimeUnit.MICROSECONDS)
-                .subscribe(tick -> {
-                    gameState.atomicMoveAndCollision();
-                });
+//        Observable.interval(GameUtils.interval, TimeUnit.MICROSECONDS)
+//                .subscribe(tick -> {
+//                    gameState.atomicMoveAndCollision();
+//                });
     }
 
     public GameState getGameState() {

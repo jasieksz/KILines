@@ -40,7 +40,7 @@ public class UpdatesWebSocketHandler {
     public void onMessage(Session user, String message) {
         String nick = getNick(user);
         System.out.println(message);
-        this.gameState.changePlayerDirection(12, Direction.valueOf(message)); // TODO change 12 for nick
+        this.gameState.changePlayerDirection("Jasiek", Direction.valueOf(message)); // TODO change 12 for nick
     }
 
     private String getNick(Session user){
