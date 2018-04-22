@@ -241,16 +241,20 @@ public class GameState {
         }
 
         private void createAGHThemeWalls() throws IOException {
-            BufferedReader br = new BufferedReader(new FileReader("/board_image/walls_to_add.txt"));
+            String root = System.getProperty("user.dir");
+            String path = "/kilines/src/main/resources/board_image/walls_to_add.txt";
+
+            StringBuilder sbuf = new StringBuilder();
+            Formatter formatter = new Formatter(sbuf);
+            formatter.format("%s%s", root, path);
+
+            BufferedReader br = new BufferedReader(new FileReader(sbuf.toString()));
             try {
                 String line = br.readLine();
 
                 while (line != null) {
-                    System.out.println(line);
                     String[] point = line.split("\\s+");
-
-                    board.put(new Point(Integer.parseInt(point[0]), Integer.parseInt(point[1])), GameUtils.WALL);
-
+                    board.put(new Point(Integer.parseInt(point[1]), Integer.parseInt(point[0])), GameUtils.WALL);
                     line = br.readLine();
                 }
             } finally {
