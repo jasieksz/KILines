@@ -18,11 +18,8 @@ public class Server {
             .addWalls();
 
     private Serializer serializer = new Serializer(getGameState());
-    private RestApi api;
 
-    public void run(){
-        api = new RestApi(getGameState());
-        api.loginUsersRequest();
+    public void run(RestApi api){
 
         Observable.interval(GameUtils.interval, TimeUnit.MILLISECONDS)
                 .subscribe(tick -> {

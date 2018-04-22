@@ -4,6 +4,7 @@ import model.*;
 import org.json.simple.JSONArray;
 import org.json.simple.JSONObject;
 import server.GameUtils;
+import server.Server;
 import server.UpdatesWebSocketHandler;
 
 import java.util.Map;
@@ -26,7 +27,7 @@ public class RestApi {
         return handler;
     }
 
-    public void loginUsersRequest() {
+    public void loginUsersRequest(Server server) {
 
         webSocket("/game/websocket", handler);
 
@@ -39,6 +40,18 @@ public class RestApi {
 
 
         get("/init", (req, res) -> generateInitRequest(this.gameState).toJSONString());
+
+        RestApi thisApi = this;
+
+        get("/start", (req, res) -> {
+            server.run(thisApi);
+            return "204";
+        });
+
+        get("/reset", (req, res) -> {
+            server.getGameState().clearWalls();
+            return "204";
+        });
 
         init();
     }
