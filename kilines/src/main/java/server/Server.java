@@ -13,23 +13,19 @@ public class Server {
     private GameState.InitializerBuilder builder = new GameState.InitializerBuilder(1)
             .boardX(GameUtils.boardX)
             .boardY(GameUtils.boardY)
-            .addPlayer(new Point(10,10), "Jasike")
             .addWalls();
 
     private Serializer serializer = new Serializer(getGameState());
     private RestApi api;
 
     public void run(){
-        System.out.println(serializer.serializeMotorcycles());
-        System.out.println("STARTED");
         api = new RestApi(getGameState());
         api.loginUsersRequest();
 
-        Observable.interval(GameUtils.interval, TimeUnit.MICROSECONDS)
+        Observable.interval(GameUtils.interval, TimeUnit.MILLISECONDS)
                 .subscribe(tick -> {
                     gameState.atomicMoveAndCollision();
                     api.getHandler().broadcast(serializer.serializeMotorcycles());
-                    System.out.println(serializer.serializeMotorcycles());
                 });
     }
 
