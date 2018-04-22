@@ -3,9 +3,11 @@ package controller;
 import model.*;
 import org.json.simple.JSONArray;
 import org.json.simple.JSONObject;
+import server.GameUtils;
 import server.UpdatesWebSocketHandler;
 
 import java.util.Map;
+import java.util.concurrent.ThreadLocalRandom;
 
 import static spark.Spark.*;
 
@@ -87,8 +89,10 @@ public class RestApi {
 
         if(isOk){
             json.put("token", 33);
+            int x = ThreadLocalRandom.current().nextInt(0, GameUtils.boardX);
+            int y = ThreadLocalRandom.current().nextInt(0, GameUtils.boardY);
 
-            gameState.addPlayer(nick, new Point(600,400));
+            gameState.addPlayer(nick, new Point(x,y));
 
         }else {
             json.put("msg", "Nickname occupied");
