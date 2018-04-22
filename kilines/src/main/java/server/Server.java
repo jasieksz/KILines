@@ -15,7 +15,8 @@ public class Server {
     private GameState.InitializerBuilder builder = new GameState.InitializerBuilder(1)
             .boardX(GameUtils.boardX)
             .boardY(GameUtils.boardY)
-            .addWalls();
+            .addWalls()
+            .addAGHWalls();
 
     private Serializer serializer = new Serializer(getGameState());
 
