@@ -124,7 +124,13 @@ class PowerUp {
 }
 
 function handleUpdate(update){
-    updatePlayers(update);
+    console.log(update);
+    if(update.type == "reset"){
+        clear();
+        setup();
+    }
+    else
+        updatePlayers(update);
 }
 
 function updatePlayers(updates) {

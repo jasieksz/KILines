@@ -21,6 +21,7 @@ class Communicator {
     }
 
     receiveUpdates(e) {
+        console.log(e);
         let msg = JSON.parse(e.data);
         this.updateCallback(msg)
     }

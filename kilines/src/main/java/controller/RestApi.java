@@ -55,6 +55,7 @@ public class RestApi {
             server.stop();
             server.getGameState().clearWalls();
             server.getGameState().resurectPlayers();
+            this.handler.broadcast("{\"type\": \"reset\"}");
             return "204";
         });
 
