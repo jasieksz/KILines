@@ -13,15 +13,13 @@ class Communicator {
     };
 
     receiveUpdates(e) {
-        console.log(e);
-        let msg = JSON.parse(e);
-        if (msg.type === "update")
-            this.updateCallback(msg)
+        let msg = JSON.parse(e.data);
+        this.updateCallback(msg)
     }
 
     openWebsocket() {
         this.socket = new WebSocket("ws://localhost:4567/game/websocket");
-        this.socket.onconnect = (e) => this.receiveUpdates(e);
+        this.socket.onmessage = (e) => this.receiveUpdates(e);
     }
 
     update(direction) {

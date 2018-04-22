@@ -2,14 +2,12 @@ package server;
 
 import model.Direction;
 import model.GameState;
-import model.Motorcycle;
 import org.eclipse.jetty.websocket.api.Session;
 import org.eclipse.jetty.websocket.api.annotations.OnWebSocketClose;
 import org.eclipse.jetty.websocket.api.annotations.OnWebSocketConnect;
 import org.eclipse.jetty.websocket.api.annotations.OnWebSocketMessage;
 import org.eclipse.jetty.websocket.api.annotations.WebSocket;
 
-import java.util.HashMap;
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
 
@@ -52,8 +50,10 @@ public class UpdatesWebSocketHandler {
     public void onMessage(Session user, String message) {
         try {
             String nick = getNick(user);
+            System.out.println(nick);
             System.out.println("got message: " + message);
-            this.gameState.changePlayerDirection(nick, Direction.valueOf(message));
+            String newMsg = message.replace("\"", "");
+            this.gameState.changePlayerDirection(nick, Direction.valueOf(newMsg));
         }catch (Exception e) {
             user.close();
             e.printStackTrace();
@@ -67,7 +67,8 @@ public class UpdatesWebSocketHandler {
                 .filter(c -> c.getName().equals("nick"))
                 .findFirst()
                 .orElseThrow(() -> new Exception("dsfa"))
-                .toString();
+                .toString().replace("nick=", "")
+                .replace("\"","");
     }
 
     public void broadcast(String message){

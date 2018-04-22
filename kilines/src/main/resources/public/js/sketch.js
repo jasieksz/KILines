@@ -1,7 +1,8 @@
-const w = 640, h = 480;
+const w = 1280, h = 960;
 const backgroundColor = 23;
 const rectW = 4;
 const rectH = 4;
+const scale = 2;
 const playerColours = [
     [0, 167, 247],
     [0, 167, 247],
@@ -17,7 +18,7 @@ const playerColours = [
     [0, 167, 247],
     [0, 167, 247]
 ];
-const obstacleColour = [0, 0, 0];
+const obstacleColour = [255, 255, 255];
 
 let deathSound;
 
@@ -81,13 +82,13 @@ function scoreboard() {
 function renderPoint(pos) {
     noStroke();
     fill(obstacleColour);
-    rect(pos.x, pos.y, 1, 1)
+    rect(pos.x * scale, pos.y * scale, rectW, rectH)
 }
 
 function keyPressed() {
     if (key === 'w' || key === 'W'){
         console.log('w');
-        communicator.update(1);
+        communicator.update("UP");
     } else if (key === 'd' || key === 'D'){
         console.log('d');
         communicator.update("RIGHT");
@@ -113,14 +114,15 @@ class Player {
 
     render () {
         stroke(this.color);
-        rect(this.x, this.y, rectW, rectH);
+        fill(this.color);
+        rect(this.x * scale, this.y * scale, rectW, rectH);
     }
 
 }
 
 function handleUpdate(update){
-    console.log(update);
-    update.players.map( (pl) => {
+       console.log(update);
+       update.map( (pl) => {
             let selectedPlayer = _.find(players, (pl2) => pl2.nick === pl.nick);
             if (selectedPlayer) {
                 selectedPlayer.x = pl.pos.x;

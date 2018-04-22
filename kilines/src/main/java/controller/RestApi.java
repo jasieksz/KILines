@@ -88,7 +88,7 @@ public class RestApi {
         if(isOk){
             json.put("token", 33);
 
-            gameState.addPlayer(nick, new Point(28,12));
+            gameState.addPlayer(nick, new Point(600,400));
 
         }else {
             json.put("msg", "Nickname occupied");
