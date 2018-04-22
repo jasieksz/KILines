@@ -19,6 +19,8 @@ let communicator = new Communicator(location.href.replace('/game.html',''), hand
 
 function preload() {
     deathSound = loadSound('sound/explosion.mp3');
+    communicator.openWebsocket();
+
 }
 
 function setup() {
@@ -26,7 +28,6 @@ function setup() {
     background(backgroundColor);
     noLoop();
     communicator.init(initState);
-    communicator.openWebsocket();
 }
 
 function draw() {
@@ -104,8 +105,30 @@ class Player {
 
 }
 
+
+class PowerUp {
+
+    constructor(data) {
+        this.id = color;
+        this.color = [238, 244, 66];
+        this.x = data.pos.x;
+        this.y = data.pos.y;
+    }
+
+    render () {
+        stroke(this.color);
+        fill(this.color);
+        rect(this.x * scale, this.y * scale, rectW, rectH);
+    }
+
+}
+
 function handleUpdate(update){
-       update.map( (pl) => {
+    updatePlayers(update);
+}
+
+function updatePlayers(updates) {
+    updates.map( (pl) => {
             let selectedPlayer = _.find(players, (pl2) => pl2.nick === pl.nick);
             if (selectedPlayer) {
                 selectedPlayer.x = pl.pos.x;
@@ -121,6 +144,10 @@ function handleUpdate(update){
     )
 }
 
+function updatePowerUps(powerUps) {
+    powerUps.map();
+}
+
 function kill(player) {
     deathSound.play();
 }
@@ -131,13 +158,14 @@ function start() {
 
 function getColor(){
     let colour = playerColours[playerColourCounter];
-    playerColourCounter++;
+    playerColourCounter = playerColourCounter + 1 % 4 ;
     return colour;
 }
 
 function restart() {
     function callback (){
-        location.reload();
+        clear();
+        setup();
     }
     communicator.restart(callback);
 }
