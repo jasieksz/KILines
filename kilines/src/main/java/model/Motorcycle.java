@@ -24,7 +24,6 @@ public class Motorcycle {
         this.isAlive = true;
         this.score = new Score();
         this.activePowerups = new ArrayList<>();
-//        this.thickerSteps = 0;
     }
 
     public List<Powerup> getActivePowerups() {

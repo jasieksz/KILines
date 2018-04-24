@@ -10,11 +10,11 @@ public class UpdatePositionService {
         int x = motorcycle.getPosition().getX();
         int y = motorcycle.getPosition().getY();
 
-        if (motorcycle.getDirection().equals(Direction.UP)){
+        if (motorcycle.getDirection().equals(Direction.UP)) {
             y -= delta;
-        } else if (motorcycle.getDirection().equals(Direction.DOWN)){
+        } else if (motorcycle.getDirection().equals(Direction.DOWN)) {
             y += delta;
-        } else if (motorcycle.getDirection().equals(Direction.LEFT)){
+        } else if (motorcycle.getDirection().equals(Direction.LEFT)) {
             x -= delta;
         } else {
             x += delta;

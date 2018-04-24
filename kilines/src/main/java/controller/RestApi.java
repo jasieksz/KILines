@@ -18,7 +18,7 @@ public class RestApi {
     private GameState gameState;
     private UpdatesWebSocketHandler handler;
 
-    public RestApi(GameState gameState){
+    public RestApi(GameState gameState) {
         this.gameState = gameState;
         handler = new UpdatesWebSocketHandler(gameState);
     }
@@ -33,7 +33,7 @@ public class RestApi {
 
         staticFiles.location("/public");
 
-        get("/login/:nick", (req, res)-> {
+        get("/login/:nick", (req, res) -> {
             String nick = req.params(":nick");
             return generateLoginRequest(nick).toJSONString();
         });
@@ -54,7 +54,7 @@ public class RestApi {
             System.out.println("Reseting...");
             server.stop();
             server.getGameState().clearWalls();
-            server.getGameState().resurectPlayers();
+            server.getGameState().resurrectPlayers();
             return "204";
         });
 
@@ -71,13 +71,13 @@ public class RestApi {
         init();
     }
 
-    private JSONObject generateInitRequest(GameState builder){
+    private JSONObject generateInitRequest(GameState builder) {
         JSONObject json = new JSONObject();
         json.put("type", "init");
 
         JSONArray arrayMotorcycle = new JSONArray();
 
-        for (Motorcycle motorcycle: builder.getMotorcycles()){
+        for (Motorcycle motorcycle : builder.getMotorcycles()) {
             JSONObject item = new JSONObject();
 
             item.put("nick", motorcycle.getPlayerNick());
@@ -108,21 +108,25 @@ public class RestApi {
         return json;
     }
 
-    private JSONObject generateLoginRequest(String nick){
+    private JSONObject generateLoginRequest(String nick) {
         JSONObject json = new JSONObject();
 
         json.put("type", "login");
         boolean isOk = !gameState.getGameUserByNickname(nick).isPresent();
         json.put("isOk", isOk);
 
-        if(isOk){
+        if (isOk) {
             json.put("token", 33);
-            int x = ThreadLocalRandom.current().nextInt(20, GameUtils.boardX-20);
-            int y = ThreadLocalRandom.current().nextInt(20, GameUtils.boardY-20);
+            int x = ThreadLocalRandom.current().nextInt(20, GameUtils.boardX - 20);
+            int y = ThreadLocalRandom.current().nextInt(20, GameUtils.boardY - 20);
+            while (gameState.getBoard().containsKey(new Point(x, y))) {
+                x = ThreadLocalRandom.current().nextInt(20, GameUtils.boardX - 20);
+                y = ThreadLocalRandom.current().nextInt(20, GameUtils.boardY - 20);
+            }
 
-            gameState.addPlayer(nick, new Point(x,y));
+            gameState.addPlayer(nick, new Point(x, y));
 
-        }else {
+        } else {
             json.put("msg", "Nickname occupied");
         }
         return json;

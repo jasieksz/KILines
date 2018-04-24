@@ -17,7 +17,7 @@ public class UpdatesWebSocketHandler {
     private Map<Session, String> sessions = new ConcurrentHashMap<>();
     private GameState gameState;
 
-    public UpdatesWebSocketHandler(GameState gameState){
+    public UpdatesWebSocketHandler(GameState gameState) {
         this.gameState = gameState;
     }
 
@@ -40,7 +40,7 @@ public class UpdatesWebSocketHandler {
             gameState.getGameUserByNickname(nick).ifPresent(e -> e.setAlive(false));
 
             System.out.println("Deleting " + user + "for reason: " + reason + "(" + statusCode + ")");
-        }catch(Exception e){
+        } catch (Exception e) {
             e.printStackTrace();
         }
     }
@@ -51,7 +51,7 @@ public class UpdatesWebSocketHandler {
             String nick = getNick(user);
             String newMsg = message.replace("\"", "");
             this.gameState.changePlayerDirection(nick, Direction.valueOf(newMsg));
-        }catch (Exception e) {
+        } catch (Exception e) {
             user.close();
             e.printStackTrace();
         }
@@ -65,16 +65,15 @@ public class UpdatesWebSocketHandler {
                 .findFirst()
                 .orElseThrow(() -> new Exception("dsfa"))
                 .toString().replace("nick=", "")
-                .replace("\"","");
+                .replace("\"", "");
     }
 
-    public void broadcast(String message){
+    public void broadcast(String message) {
         sessions.keySet().stream().filter(Session::isOpen).forEach(session -> {
             try {
                 session.getRemote().sendString(message);
             } catch (Exception e) {
                 System.out.println(".");
-                //e.printStackTrace();
             }
         });
     }

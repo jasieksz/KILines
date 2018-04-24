@@ -1,7 +1,5 @@
 package model;
 
-import java.util.Random;
-
 public enum Direction {
     UP(0),
     DOWN(1),

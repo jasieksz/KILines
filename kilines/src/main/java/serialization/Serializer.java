@@ -21,7 +21,7 @@ public class Serializer {
         return gson.toJson(gameState);
     }
 
-    public String serializeMotorcycles(){
+    public String serializeMotorcycles() {
         return gson.toJson(gameState.getMotorcycles());
     }
 
@@ -29,15 +29,15 @@ public class Serializer {
         return gson.toJson(gameState.getBoard());
     }
 
-    public String serializeMotorcyclesWithName(){
+    public String serializeMotorcyclesWithName() {
         return "{\"players\": " + serializeMotorcycles() + "}";
     }
 
-    public String serializePowerUpsWithName(){
+    public String serializePowerUpsWithName() {
         return "{\"powerups\": " + serializePowerUps() + "}";
     }
 
-    private String serializePowerUps(){
+    private String serializePowerUps() {
         return gson.toJson(gameState.getPowerups());
     }
 }

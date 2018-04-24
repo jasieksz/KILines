@@ -27,16 +27,16 @@ public class GameState {
         this.motorcycles = motorcycles;
     }
 
-    public void clearWalls(){
+    public void clearWalls() {
         System.out.println(this.board.size());
         this.board = new HashMap<>(this.initialBoard);
         System.out.println("clearing walls: ");
         System.out.println(this.board.size());
     }
 
-    public void resurectPlayers(){
+    public void resurrectPlayers() {
         this.motorcycles.forEach(e -> e.setAlive(true));
-        System.out.println("resurecting players: ");
+        System.out.println("resurrecting players: ");
     }
 
     private UpdatePositionService updatePositionService = new UpdatePositionService();
@@ -54,7 +54,7 @@ public class GameState {
         return motorcycles;
     }
 
-    public void addPlayer(String nick, Point pos){
+    public void addPlayer(String nick, Point pos) {
         motorcycles.add(new Motorcycle(nick, pos));
     }
 
@@ -69,7 +69,7 @@ public class GameState {
     }
 
 
-    private void updateBoard(){
+    private void updateBoard() {
         motorcycles.stream()
                 .filter(Motorcycle::isAlive)
                 .forEach(motorcycle -> board.put(motorcycle.getPosition(), motorcycle.getPlayerNick()));
@@ -135,26 +135,27 @@ public class GameState {
             switch (direction) {
                 case UP:
                 case DOWN:
-                    board.put(new Point(motorcycle.getPosition().getX()-1, motorcycle.getPosition().getY()), motorcycle.getPlayerNick());
-                    board.put(new Point(motorcycle.getPosition().getX()+1, motorcycle.getPosition().getY()), motorcycle.getPlayerNick());
+                    board.put(new Point(motorcycle.getPosition().getX() - 1, motorcycle.getPosition().getY()), motorcycle.getPlayerNick());
+                    board.put(new Point(motorcycle.getPosition().getX() + 1, motorcycle.getPosition().getY()), motorcycle.getPlayerNick());
                     break;
                 case LEFT:
                 case RIGHT:
-                    board.put(new Point(motorcycle.getPosition().getX(), motorcycle.getPosition().getY()-1), motorcycle.getPlayerNick());
-                    board.put(new Point(motorcycle.getPosition().getX(), motorcycle.getPosition().getY()+1), motorcycle.getPlayerNick());
+                    board.put(new Point(motorcycle.getPosition().getX(), motorcycle.getPosition().getY() - 1), motorcycle.getPlayerNick());
+                    board.put(new Point(motorcycle.getPosition().getX(), motorcycle.getPosition().getY() + 1), motorcycle.getPlayerNick());
 
             }
         }
 
     }
 
-    public Optional<Motorcycle> getGameUserByNickname(String nick){
-       return motorcycles.stream().filter(e-> e.getPlayerNick().equals(nick)).findFirst();
+    public Optional<Motorcycle> getGameUserByNickname(String nick) {
+        return motorcycles.stream().filter(e -> e.getPlayerNick().equals(nick)).findFirst();
     }
 
     /*
      * GAME STATE INITIALIZER
      */
+
     public static class InitializerBuilder {
         private final int minPlayers;
         private int x;
@@ -199,21 +200,13 @@ public class GameState {
         }
 
         public GameState build() {
-//            while (motorcycleList.size() < minPlayers){
-//                addBot(new Point(0,0), GameUtils.WALL); // TODO: Prepare for robot uprising
-//            }
             return new GameState(this.board, this.motorcycleList);
-        }
-
-
-        private void addBot(Point initialPosition, String id) {
-            motorcycleList.add(new Motorcycle(id, initialPosition));
         }
 
         private void createWalls() {
             IntStream.range(0, x).forEach(i -> {
                 board.put(new Point(i, 0), GameUtils.WALL);
-                board.put(new Point(i, y-1), GameUtils.WALL);
+                board.put(new Point(i, y - 1), GameUtils.WALL);
             });
             IntStream.range(0, y).forEach(i -> {
                 board.put(new Point(0, i), GameUtils.WALL);
@@ -241,7 +234,6 @@ public class GameState {
             } finally {
                 br.close();
             }
-            return;
         }
 
 
